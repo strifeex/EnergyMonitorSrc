@@ -6,8 +6,6 @@ package energymonitor;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -21,15 +19,16 @@ public class ClientInfo extends javax.swing.JFrame {
      * Creates new form ClientInfo
      */
     GetInfo info = new GetInfo();
+    ManageDB db = new ManageDB();
+    
     public ClientInfo() {
         initComponents();
         lbl_IPconn.setText("");
-        
         lbl_MAC.setText(info.getMAC());
         txt_name.setText(info.getClientName());
         txt_detail.setText("");
         txt_IP.setText(info.loadSeverIP());
-        
+              
     }
 
     /**
@@ -158,29 +157,27 @@ public class ClientInfo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_okActionPerformed
-        // TODO add your handling code here:
-        JOptionPane.showMessageDialog(null, "Test Benth");
+        
+        if(db.CheckDB("localhost", "EnergyMonitor")){
+                
+               JOptionPane.showMessageDialog(null, "Database has Exists.");
+                
+        }else{
+        
+            if(db.CreatDB()){
+                if(db.Createtable("localhost", "EnergyMonitor")){
+                    JOptionPane.showMessageDialog(null, "Database has been Create.");
+                }
+            }
+        }
+        
+
+        
     }//GEN-LAST:event_btn_okActionPerformed
 
-    private boolean connDB(String serverIP){
-        boolean res = true;
-        try{
-        //load Class driver
-        Class.forName("com.mysql.jdbc.Driver");
-
-        //Connect db
-        String url = "jdbc:mysql://" + serverIP + "/java_db";
-        Connection conn = DriverManager.getConnection(url, "root", "1234");
-                      
-        }
-        catch(Exception ex){
-            res = false;
-        }
-        return res;
-    }
     private void btn_testIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_testIPActionPerformed
-
-        if (connDB(txt_IP.getText())) {
+        
+        if (db.ConnDB(txt_IP.getText())) {
             ImageIcon icon = new ImageIcon("correctlogo.png");
             lbl_IPconn.setIcon(icon);
             info.saveServerIP(txt_IP.getText());

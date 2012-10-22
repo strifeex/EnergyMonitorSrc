@@ -24,8 +24,22 @@ public class ManageDB {
              ex.printStackTrace();
        }
    }
+
+   public boolean ConnDB(String serverIP){
+        this.res = true;
+        try{
+        //Connect db
+        this.url = "jdbc:mysql://" + serverIP ;
+        this.conn= DriverManager.getConnection(this.url, this.User, this.Pass);
+                      
+        }
+        catch(Exception ex){
+            res = false;
+        }
+        return res;
+    }   
    
-   private boolean CheckDB(String serverIP,String NameDB){
+   public boolean CheckDB(String serverIP,String NameDB){
         this.res = true;
         try{
         //Connect db
@@ -67,6 +81,7 @@ public class ManageDB {
                    + "name varchar(255) , "
                    + "detail varchar(255) , "
                    + "time TIMESTAMP , "
+                   + "status ENUM('START','END') , "
                    + "PRIMARY KEY (Id) "
                    + ") ";
            this.stmt.executeUpdate(this.sql);
