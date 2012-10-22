@@ -14,7 +14,7 @@ public class ManageDB {
    private Connection conn = null;
    private Statement stmt = null;
    private String sql;
-   
+   private boolean res = true;
    public void ManageDB(){
        try{
              //load Class driver
@@ -26,7 +26,7 @@ public class ManageDB {
    }
    
    private boolean CheckDB(String serverIP,String NameDB){
-        boolean res = true;
+        this.res = true;
         try{
         //Connect db
         this.url = "jdbc:mysql://" + serverIP + "/"+NameDB;
@@ -39,7 +39,8 @@ public class ManageDB {
         return res;
     }
    
-   public void CreatDB(){
+   public boolean CreatDB(){
+       this.res = true;
        url = "jdbc:mysql://localhost/";
        try{
            this.conn = DriverManager.getConnection(this.url, this.User, this.Pass);
@@ -48,9 +49,57 @@ public class ManageDB {
            this.stmt.executeUpdate(this.sql);
        }
        catch(Exception ex){
+            res = false;
+       }
+       return res;
+   }
+   
+   public boolean Createtable(String serverIP,String NameDB){
+       this.res = true;
+       this.url = "jdbc:mysql://" + serverIP + "/"+NameDB;
+       try{
+           this.conn = DriverManager.getConnection(this.url, this.User, this.Pass);
+           this.stmt = this.conn.createStatement();
+           this.sql = "CREATE TABLE client_info "
+                   + "( "
+                   + "Id int , "
+                   + "MAC varchar(50) , "
+                   + "name varchar(255) , "
+                   + "detail varchar(255) , "
+                   + "time TIMESTAMP , "
+                   + "PRIMARY KEY (Id) "
+                   + ") ";
+           this.stmt.executeUpdate(this.sql);
            
+           this.sql = "CREATE TABLE sever_info "
+                   + "( "
+                   + "Id int , "
+                   + "MAC varchar(50) , "
+                   + "delay int , "
+                   + "cost_per_unit int , "
+                   + "time TIMESTAMP , "
+                   + "PRIMARY KEY (Id) "
+                   + ") ";
+           this.stmt.executeUpdate(this.sql);
+       }
+       catch(Exception ex){
+           res = false;
+       }
+       return res;
+
+   }
+   
+   public void closeDB(){
+       if(this.conn != null){
+           try {
+               this.conn.close();
+               this.stmt.close();
+           }
+           catch(Exception ex){ 
+           }          
        }
    }
+   
 }
 
     
