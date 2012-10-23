@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
+import java.util.Timer;
 
 public class EnergyMonitor {
 
@@ -52,7 +53,11 @@ public class EnergyMonitor {
     public static void main(String[] args) {
  
         setNimbusUI();
-        
+         Timer timer = new Timer("sendData");
+         TaskProcess t = new TaskProcess();
+         
+         timer.schedule(t, 0, 1000);
+         
         Runnable runner;
         runner = new Runnable() {
             @Override
@@ -115,5 +120,6 @@ public class EnergyMonitor {
             }
         };
         EventQueue.invokeLater(runner);
+        
     }
 }
