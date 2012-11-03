@@ -18,16 +18,16 @@ public class ClientInfo extends javax.swing.JFrame {
     /**
      * Creates new form ClientInfo
      */
-    GetInfo info = new GetInfo();
+
     ManageDB db = new ManageDB();
     
     public ClientInfo() {
         initComponents();
         lbl_IPconn.setText("");
-        lbl_MAC.setText(info.getMAC());
-        txt_name.setText(info.getClientName());
+        lbl_MAC.setText(GetInfo.getMAC());
+        txt_name.setText(GetInfo.getClientName());
         txt_detail.setText("");
-        txt_IP.setText(info.loadSeverIP());
+        txt_IP.setText(GetInfo.loadSeverIP());
               
     }
 
@@ -157,30 +157,30 @@ public class ClientInfo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_okActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_okActionPerformed
-        
-        if(db.CheckDB("localhost", "EnergyMonitor")){
-                
-               JOptionPane.showMessageDialog(null, "Database has Exists.");
-                
-        }else{
-        
-            if(db.CreatDB()){
-                if(db.Createtable("localhost", "EnergyMonitor")){
-                    JOptionPane.showMessageDialog(null, "Database has been Create.");
-                }
-            }
-        }
-        
+        // check and create database for sever
+//        if(db.CheckDB("localhost", "EnergyMonitor")){
+//                
+//               JOptionPane.showMessageDialog(null, "Database has Exists.");
+//                
+//        }else{
+//        
+//            if(db.CreatDB()){
+//                if(db.Createtable("localhost", "EnergyMonitor")){
+//                    JOptionPane.showMessageDialog(null, "Database has been Create.");
+//                }
+//            }
+//        }
+        btn_testIPActionPerformed(evt);
 
         
     }//GEN-LAST:event_btn_okActionPerformed
 
     private void btn_testIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_testIPActionPerformed
         
-        if (db.ConnDB(txt_IP.getText())) {
+        if (db.CheckDB(txt_IP.getText(),"EnergyMonitor")) {
             ImageIcon icon = new ImageIcon("correctlogo.png");
             lbl_IPconn.setIcon(icon);
-            info.saveServerIP(txt_IP.getText());
+            GetInfo.saveServerIP(txt_IP.getText());
         } else {
             ImageIcon icon = new ImageIcon("incorrectuse.png");
             lbl_IPconn.setIcon(icon);

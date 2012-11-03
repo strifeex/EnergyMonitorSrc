@@ -104,6 +104,17 @@ public class ManageDB {
 
    }
    
+   public void insertData(String sql){
+       try{
+           this.stmt = this.conn.createStatement();
+           this.sql = sql;
+           this.stmt.executeUpdate(this.sql);
+       }
+       catch(Exception ex){
+           ex.printStackTrace();
+       }
+   }
+   
    public void closeDB(){
        if(this.conn != null){
            try {

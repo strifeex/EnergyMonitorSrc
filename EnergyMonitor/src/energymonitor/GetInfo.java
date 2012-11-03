@@ -14,24 +14,24 @@ import javax.swing.JOptionPane;
 
 public class GetInfo {
 
-    private String name_client;
-    private String ip_client;
-    private String MAC_client;
-    private InetAddress ia;
-    private String server_ip = "";
+    static String name_client;
+    static String ip_client;
+    static String MAC_client;
+    static InetAddress ia;
+    static String server_ip = "";
     
-    public String loadSeverIP(){
+    static String loadSeverIP(){
         try{
             Scanner sc = new Scanner(new File("ipconnect.in"));
-            this.server_ip = sc.nextLine();
+            GetInfo.server_ip = sc.nextLine();
         }
         catch(Exception ex){
             File file = new File("ipconnect.in");
         }
-        return this.server_ip;
+        return GetInfo.server_ip;
     }
     
-    public void saveServerIP(String iptext){
+    static void saveServerIP(String iptext){
         try{
             FileWriter fw = new FileWriter("ipconnect.in");
             BufferedWriter out = new BufferedWriter(fw);
@@ -44,22 +44,22 @@ public class GetInfo {
         }
     }
     
-    public String getClientName() {
+    static String getClientName() {
 
-        this.name_client = ia.getHostName();
-        return this.name_client;
+        GetInfo.name_client = ia.getHostName();
+        return GetInfo.name_client;
     }
 
-    public String getIP() {
+    static String getIP() {
 
-        this.ip_client = ia.getHostAddress();
-        return this.ip_client;
+        GetInfo.ip_client = ia.getHostAddress();
+        return GetInfo.ip_client;
     }
 
-    public String getMAC() {
+    static String getMAC() {
 
         try {
-            this.ia = InetAddress.getLocalHost();
+            GetInfo.ia = InetAddress.getLocalHost();
             NetworkInterface network = NetworkInterface.getByInetAddress(ia);
             byte[] mac = network.getHardwareAddress();
 
@@ -68,18 +68,18 @@ public class GetInfo {
                 sb.append(String.format("%02X%s", mac[i],
                         (i < mac.length - 1) ? "-" : ""));
             }
-            this.MAC_client = sb.toString();
+            GetInfo.MAC_client = sb.toString();
             
         } catch (UnknownHostException | SocketException e) {
 
-            this.MAC_client = e.toString();
+            GetInfo.MAC_client = e.toString();
 
         }
 
-        return this.MAC_client;
+        return GetInfo.MAC_client;
     }
     
-    public int[] getMousePosition(){
+    static int[] getMousePosition(){
         int [] position = new int[2];
         position[0] =  Integer.parseInt(MouseInfo.getPointerInfo().getLocation().x+"");
         position[1] =  Integer.parseInt(MouseInfo.getPointerInfo().getLocation().y+"");
