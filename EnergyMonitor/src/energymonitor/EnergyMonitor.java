@@ -61,7 +61,7 @@ public class EnergyMonitor {
                     PopupMenu popup = new PopupMenu();
 
                     //TrayIcon trayIcon = new TrayIcon(ImageDisplay.getTrayImage(), "Energy Monitor", popup);
-                    //trayIcon.set
+                    
                     trayIcon.setToolTip("Energy Monitor");
                     trayIcon.setPopupMenu(popup);
                     //menu1
