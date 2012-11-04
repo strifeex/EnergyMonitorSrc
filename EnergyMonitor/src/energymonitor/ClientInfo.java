@@ -179,7 +179,7 @@ public class ClientInfo extends javax.swing.JFrame {
         
         if (db.CheckDB(txt_IP.getText(),"EnergyMonitor")) {
             ImageIcon icon = new ImageIcon("correctlogo.png");
-            lbl_IPconn.setIcon(icon);
+            lbl_IPconn.setIcon(icon);           
             GetInfo.saveServerIP(txt_IP.getText());
         } else {
             ImageIcon icon = new ImageIcon("incorrectuse.png");

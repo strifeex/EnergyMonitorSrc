@@ -19,29 +19,42 @@ public class TaskProcess extends TimerTask {
     }
     
     public void run() {
-       this.mdb.CheckDB("localhost","energymonitor");
-       
-        int[] mousecurent = GetInfo.getMousePosition();
+        
+        boolean chk_db = this.mdb.CheckDB(GetInfo.loadSeverIP(), "energymonitor");
 
-        if ((this.mousePos[0] == mousecurent[0]) && (this.mousePos[1] == mousecurent[1])) {
-            
-            times++;
-            
-            if (times == this.second) {
-                System.out.println("send data");
+        if (chk_db) {
+
+            ImageDisplay.setTrayImage("green-energy_icon.png");
+            EnergyMonitor.trayIcon.setImage(ImageDisplay.getTrayImage());
+            int[] mousecurent = GetInfo.getMousePosition();
+
+            if ((this.mousePos[0] == mousecurent[0]) && (this.mousePos[1] == mousecurent[1])) {
+
+                times++;
+
+                if (times == this.second) {
+                    System.out.println("send data");
+                } else {
+
+                    System.out.println("processing time");
+                    this.mdb.insertData("insert into client_info(MAC,name,detail,status) values('mactest','nametest','detailtest','START') ");
+
+
+                }
             } else {
-                
-                System.out.println("processing time");
-                this.mdb.insertData("insert into client_info(MAC,name,detail,status) values('mactest','nametest','detailtest','START') ");
-                //Stop Timer.
-                //this.cancel();
+
+                times = 0;
             }
-        }else{
+            this.mousePos[0] = mousecurent[0];
+            this.mousePos[1] = mousecurent[1];
             
-            times = 0;
+        }else{
+            ImageDisplay.setTrayImage("green-energy-icon-discoon.png");
+            EnergyMonitor.trayIcon.setImage(ImageDisplay.getTrayImage());
+            //Stop Timer.
+            //this.cancel();
+            
         }
-        this.mousePos[0] = mousecurent[0];
-        this.mousePos[1] = mousecurent[1];
 
 
     }
