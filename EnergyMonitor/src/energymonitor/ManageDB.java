@@ -82,6 +82,8 @@ public class ManageDB {
                    + "detail varchar(255) , "
                    + "time TIMESTAMP , "
                    + "status ENUM('START','END') , "
+                   + "lost_min int , "
+                   + "start_time TIMESTAMP , "
                    + "PRIMARY KEY (Id) "
                    + ") ";
            this.stmt.executeUpdate(this.sql);
@@ -115,6 +117,27 @@ public class ManageDB {
        }
    }
    
+   public int getDelay(){
+       
+       try {
+           this.sql = "select delay from sever_info";
+           ResultSet rs = this.stmt.executeQuery(sql);
+           return Integer.parseInt(rs.getString("delay"));
+       } catch (Exception ex) {
+           return 0;
+       }
+   }
+   
+   public int getCurrentid(String mac_address){
+
+       try {
+           this.sql = "select MAX(id) as id from client_info where MAC = '"+mac_address+"'";
+           ResultSet rs = this.stmt.executeQuery(sql);
+           return Integer.parseInt(rs.getString("id"));
+       } catch (Exception ex) {
+           return 0;
+       }
+   }
    public void closeDB(){
        if(this.conn != null){
            try {
