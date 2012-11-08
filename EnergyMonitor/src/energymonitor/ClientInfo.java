@@ -23,11 +23,13 @@ public class ClientInfo extends javax.swing.JFrame {
     
     public ClientInfo() {
         initComponents();
+        txt_IP.setText(GetInfo.loadSeverIP());
         lbl_IPconn.setText("");
         lbl_MAC.setText(GetInfo.getMAC());
-        txt_name.setText(GetInfo.getClientName());
-        txt_detail.setText("");
-        txt_IP.setText(GetInfo.loadSeverIP());
+        String tmp_name = GetInfo.name_txt.equals("") ? GetInfo.getClientName() : GetInfo.name_txt;
+        txt_name.setText(tmp_name);
+        txt_detail.setText(GetInfo.detail_txt);
+        
               
     }
 
@@ -171,7 +173,7 @@ public class ClientInfo extends javax.swing.JFrame {
 //            }
 //        }
         btn_testIPActionPerformed(evt);
-
+        this.setVisible(false);
         
     }//GEN-LAST:event_btn_okActionPerformed
 
@@ -180,7 +182,7 @@ public class ClientInfo extends javax.swing.JFrame {
         if (db.CheckDB(txt_IP.getText(),"EnergyMonitor")) {
             ImageIcon icon = new ImageIcon("correctlogo.png");
             lbl_IPconn.setIcon(icon);           
-            GetInfo.saveServerIP(txt_IP.getText());
+            GetInfo.saveServerIP(txt_IP.getText(),txt_name.getText(),txt_detail.getText());
         } else {
             ImageIcon icon = new ImageIcon("incorrectuse.png");
             lbl_IPconn.setIcon(icon);

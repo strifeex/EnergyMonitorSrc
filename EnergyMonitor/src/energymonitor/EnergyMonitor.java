@@ -15,7 +15,9 @@ import javax.swing.UIManager;
 import java.util.Timer;
 
 public class EnergyMonitor {
+    
     static TrayIcon trayIcon = new TrayIcon(ImageDisplay.getTrayImage());
+    
     static class ShowMessageListener implements ActionListener {
 
         TrayIcon trayIcon;
@@ -90,11 +92,24 @@ public class EnergyMonitor {
                     });
                     popup.add(item);
                     //menu2
+//                    item = new MenuItem("connection");
+//                    if (ImageDisplay.statusTrayImg) {
+//                        item.addActionListener(new ShowMessageListener(trayIcon,
+//                                "Connection", "connected", TrayIcon.MessageType.INFO));
+//                    } else {
+//                        item.addActionListener(new ShowMessageListener(trayIcon,
+//                                "Connection", "not connect", TrayIcon.MessageType.ERROR));
+//                    }
+//                    
+//                    
+//                    popup.add(item);
+                    
+                    //menu3
                     item = new MenuItem("About Energy Monitor");
                     item.addActionListener(new ShowMessageListener(trayIcon,
                             "Name Title", "name", TrayIcon.MessageType.ERROR));
                     popup.add(item);
-                    //menu3
+                    //menu4
 //                    item = new MenuItem("Close");
 //                    item.addActionListener(new ActionListener() {
 //                        public void actionPerformed(ActionEvent e) {

@@ -6,7 +6,7 @@ import java.awt.Toolkit;
 
 public class ImageDisplay {
     static Image TrayImage = Toolkit.getDefaultToolkit().getImage("green-energy_icon.png");
-    
+    static boolean statusTrayImg = true;
     static Image getTrayImage(){
         return ImageDisplay.TrayImage;
     }

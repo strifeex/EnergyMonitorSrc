@@ -14,28 +14,36 @@ import javax.swing.JOptionPane;
 
 public class GetInfo {
 
-    static String name_client;
+    static String name_client ;
     static String ip_client;
-    static String MAC_client;
+    static String MAC_client ;
     static InetAddress ia;
     static String server_ip = "";
+    static String name_txt = "";
+    static String detail_txt = "";
+    static String filesave_name = "ipconnect.in";
     
     static String loadSeverIP(){
         try{
-            Scanner sc = new Scanner(new File("ipconnect.in"));
+            Scanner sc = new Scanner(new File(filesave_name));
             GetInfo.server_ip = sc.nextLine();
+            GetInfo.name_txt = sc.nextLine();
+            GetInfo.detail_txt = sc.nextLine();
         }
         catch(Exception ex){
-            File file = new File("ipconnect.in");
+            File file = new File(filesave_name);
+            
         }
         return GetInfo.server_ip;
     }
     
-    static void saveServerIP(String iptext){
+    static void saveServerIP(String iptext,String name ,String details){
         try{
-            FileWriter fw = new FileWriter("ipconnect.in");
+            FileWriter fw = new FileWriter(filesave_name);
             BufferedWriter out = new BufferedWriter(fw);
             out.write(iptext);
+            out.write("\n"+name);
+            out.write("\n"+details);
             out.close(); 
         }
         catch(Exception ex){
