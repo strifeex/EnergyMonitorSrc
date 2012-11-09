@@ -111,12 +111,25 @@ public class ManageDB {
            this.stmt = this.conn.createStatement();
            this.sql = sql;
            this.stmt.executeUpdate(this.sql);
+            System.out.println(sql);
        }
        catch(Exception ex){
            ex.printStackTrace();
+           System.out.println(ex.toString()+"--binsert-----");
        }
    }
    
+      public void updateData(String sql){
+       try{
+           this.stmt = this.conn.createStatement();
+           this.sql = sql;
+           this.stmt.executeUpdate(this.sql);
+       }
+       catch(Exception ex){
+           ex.printStackTrace();
+           System.out.println(sql+"    --bUPDATEEE-----");
+       }
+   }
    public int getDelay(){
        
        try {
@@ -131,10 +144,13 @@ public class ManageDB {
    public int getCurrentid(String mac_address){
 
        try {
-           this.sql = "select MAX(id) as id from client_info where MAC = '"+mac_address+"'";
+           this.sql = "select MAX(id) from client_info where MAC = '"+mac_address+"'";
            ResultSet rs = this.stmt.executeQuery(sql);
-           return Integer.parseInt(rs.getString("id"));
+           rs.next();
+           return Integer.parseInt(rs.getString(1));
        } catch (Exception ex) {
+           ex.printStackTrace();
+           System.out.println(ex.toString()+"----bbbbbbbb---");
            return 0;
        }
    }

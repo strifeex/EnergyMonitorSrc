@@ -1,7 +1,7 @@
 
 package energymonitor;
 
-import java.awt.TrayIcon;
+//import java.awt.TrayIcon;
 import java.util.TimerTask;
 
 public class TaskProcess extends TimerTask {
@@ -10,7 +10,7 @@ public class TaskProcess extends TimerTask {
     private int second = 60; // วินาที ที่จะทำการเก็บข้อมูล  // ค่าเริ่มต้นที่ 1 นาที
     private int[] mousePos = {0,0};  // ตำแหน่งของเคอเซอบนหน้าจอ  แกน x ,y
     private ManageDB mdb = new ManageDB(); 
-    private String status = "END";  // status สำหรับ ส่งไปยัง server  // start = เริ่มไม่มีการใช้งานเคอเซอร์   end = เริ่มมีการใช้งาน เคอเซออีกครั้ง
+    private String status = "";  // status สำหรับ ส่งไปยัง server  // start = เริ่มไม่มีการใช้งานเคอเซอร์   end = เริ่มมีการใช้งาน เคอเซออีกครั้ง
     private String tmp_MAC = "";  // เก็บ MAC Address เผื่อ เพิ่มข้อมูล
     private int tmp_id = 0; // เก็บ id เพี่อ อัพเดท ข้อมูล  เมื่อ มีการขยับเคอเซออีกครั้ง
     
@@ -23,7 +23,7 @@ public class TaskProcess extends TimerTask {
             //query time from sever  for send data times
             // กำหนด ระยะเวลาที่ ไม่มีการขยับ เคอเซอร์  จาก  sever  กำหนดเป็นนาที
             // นำมาเปลี่ยนเป็นวินาที  
-            this.second = this.mdb.getDelay() != 0 ? this.mdb.getDelay()*60 : this.second ;
+            //this.second = this.mdb.getDelay() != 0 ? this.mdb.getDelay()*60 : this.second ;
             // systemtray icon เป็นสีเขียว  เพื่อแสดงว่าสามารถติดต่อ server ได้
             ImageDisplay.setTrayImage("green-energy_icon.png");
             ImageDisplay.statusTrayImg = true;
@@ -35,45 +35,41 @@ public class TaskProcess extends TimerTask {
                 //นับเวลาเมื่ออยู่ที่เดิม
                 times++;
                 // cursor อยู่ที่เดิม เป็นเวลา ตามที่กำหนด  จะส่งข้อมูล ถือว่าสิ้นเปลือง
-                if (times >= this.second) {
-                    System.out.println("send data");
+                if (times == this.second) {
                     //
-                    status = status.equals("END") ? "START" : "END" ;
+                    status = "START";
+                    this.tmp_MAC = GetInfo.getMAC();
+                    this.mdb.insertData("insert into client_info(MAC,name,detail,status,lost_min,start_time)"
+                            + " values('" + tmp_MAC + "',"
+                            + "'"+GetInfo.name_txt+"',"
+                            + "'"+GetInfo.detail_txt+"',"
+                            + "'" + status + "',"
+                            + "'" + (times / 60) + "',"
+                            + "SUBDATE(NOW(),INTERVAL " + times + " SECOND)) ");
+
+                    this.tmp_id = this.mdb.getCurrentid(tmp_MAC);
+
+                    System.out.println("send data insert"+times + "S"+ "  tmp_id="+this.tmp_id );
                     
-                    if(this.tmp_MAC.isEmpty()){
-                        this.tmp_MAC = GetInfo.getMAC();
-                        this.mdb.insertData("insert into client_info(MAC,name,detail,status,lost_min,start_time)"
-                                + " values('"+tmp_MAC+"',"
-                                + "'nametest',"
-                                + "'detailtest',"
-                                + "'"+status+"',"
-                                + "'"+(times/60)+"',"
-                                + "SUBDATE(NOW(),INTERVAL "+times+" SECOND)) ");
-                        
-                        this.tmp_id = this.mdb.getCurrentid(tmp_MAC);
-                    
-                    }else{
-                        //todo
-                        //update data
-                        this.mdb.insertData("update client_info set status = '"+status+"' , "
-                                + "name = 'namtest' , "
-                                + "detail = 'detailtest' , "
-                                + "lost_min = "+(times/60)+" , "
-                                + "start_time = SUBDATE(NOW(),INTERVAL "+times+" SECOND)) "
-                                + "where id = '"+this.tmp_id+"'");
-                        
-                        this.tmp_MAC = "";
-                        this.tmp_id = 0;
-                    }
-                    
-                    //times = 0 ;
+                }else if(times > this.second){
+                    //update data
+                    status = "END";
+                    this.mdb.updateData("update client_info set status = '" + status + "' , "
+                            + "name = '" + tmp_MAC + "' , "
+                            + "detail = '"+GetInfo.detail_txt+"' , "
+                            + "lost_min = " + (times / 60) + " , "
+                            + "start_time = SUBDATE(NOW(),INTERVAL " + times + " SECOND) "
+                            + "where Id = " + this.tmp_id + "");
+
+                    this.tmp_MAC = "";
+                    this.tmp_id = 0;
+                    System.out.println("send data update"+times + "S" + "  tmp_id="+this.tmp_id );
                     
                 } else {
-                    System.out.println("processing time");
+                    System.out.println("processing time"+times + "S"+ "  tmp_id="+this.tmp_id );
                 
                 }
             } else {
-
                 times = 0;
             }
             
