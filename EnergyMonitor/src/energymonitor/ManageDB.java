@@ -111,11 +111,9 @@ public class ManageDB {
            this.stmt = this.conn.createStatement();
            this.sql = sql;
            this.stmt.executeUpdate(this.sql);
-            System.out.println(sql);
        }
        catch(Exception ex){
            ex.printStackTrace();
-           System.out.println(ex.toString()+"--binsert-----");
        }
    }
    
@@ -127,7 +125,6 @@ public class ManageDB {
        }
        catch(Exception ex){
            ex.printStackTrace();
-           System.out.println(sql+"    --bUPDATEEE-----");
        }
    }
    public int getDelay(){
@@ -150,7 +147,6 @@ public class ManageDB {
            return Integer.parseInt(rs.getString(1));
        } catch (Exception ex) {
            ex.printStackTrace();
-           System.out.println(ex.toString()+"----bbbbbbbb---");
            return 0;
        }
    }

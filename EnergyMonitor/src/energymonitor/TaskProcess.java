@@ -12,7 +12,7 @@ public class TaskProcess extends TimerTask {
     private ManageDB mdb = new ManageDB(); 
     private String status = "";  // status สำหรับ ส่งไปยัง server  // start = เริ่มไม่มีการใช้งานเคอเซอร์   end = เริ่มมีการใช้งาน เคอเซออีกครั้ง
     private String tmp_MAC = "";  // เก็บ MAC Address เผื่อ เพิ่มข้อมูล
-    private int tmp_id = 0; // เก็บ id เพี่อ อัพเดท ข้อมูล  เมื่อ มีการขยับเคอเซออีกครั้ง
+    private int tmp_id ; // เก็บ id เพี่อ อัพเดท ข้อมูล  เมื่อ มีการขยับเคอเซออีกครั้ง
     
     public void run() {
         // เชค ว่ามี Database 
@@ -55,14 +55,13 @@ public class TaskProcess extends TimerTask {
                     //update data
                     status = "END";
                     this.mdb.updateData("update client_info set status = '" + status + "' , "
-                            + "name = '" + tmp_MAC + "' , "
+                            + "name = '" + GetInfo.name_txt + "' , "
                             + "detail = '"+GetInfo.detail_txt+"' , "
                             + "lost_min = " + (times / 60) + " , "
                             + "start_time = SUBDATE(NOW(),INTERVAL " + times + " SECOND) "
                             + "where Id = " + this.tmp_id + "");
 
                     this.tmp_MAC = "";
-                    this.tmp_id = 0;
                     System.out.println("send data update"+times + "S" + "  tmp_id="+this.tmp_id );
                     
                 } else {
