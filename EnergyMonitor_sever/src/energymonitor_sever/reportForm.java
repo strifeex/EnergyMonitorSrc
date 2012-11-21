@@ -87,6 +87,7 @@ public class reportForm extends javax.swing.JFrame {
         jPanel_L.setPreferredSize(new java.awt.Dimension(100, 1172));
 
         buttonGroup1.add(jToggleDaily);
+        jToggleDaily.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
         jToggleDaily.setText("Daily");
         jToggleDaily.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -95,24 +96,28 @@ public class reportForm extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(jToggleWeekly);
+        jToggleWeekly.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
         jToggleWeekly.setText("Weekly");
         jToggleWeekly.setMaximumSize(new java.awt.Dimension(55, 23));
         jToggleWeekly.setMinimumSize(new java.awt.Dimension(55, 23));
         jToggleWeekly.setPreferredSize(new java.awt.Dimension(55, 23));
 
         buttonGroup1.add(jToggleMonthly);
+        jToggleMonthly.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
         jToggleMonthly.setText("Monthly");
         jToggleMonthly.setMaximumSize(new java.awt.Dimension(55, 23));
         jToggleMonthly.setMinimumSize(new java.awt.Dimension(55, 23));
         jToggleMonthly.setPreferredSize(new java.awt.Dimension(55, 23));
 
         buttonGroup1.add(jToggleYearly);
+        jToggleYearly.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
         jToggleYearly.setText("Yearly");
         jToggleYearly.setMaximumSize(new java.awt.Dimension(55, 23));
         jToggleYearly.setMinimumSize(new java.awt.Dimension(55, 23));
         jToggleYearly.setPreferredSize(new java.awt.Dimension(55, 23));
 
         buttonGroup1.add(jToggleClientlist);
+        jToggleClientlist.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
         jToggleClientlist.setText("ClientList");
 
         javax.swing.GroupLayout jPanel_LLayout = new javax.swing.GroupLayout(jPanel_L);
@@ -122,7 +127,7 @@ public class reportForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_LLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel_LLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jToggleClientlist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jToggleClientlist, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                     .addComponent(jToggleYearly, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jToggleDaily, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jToggleWeekly, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -164,26 +169,32 @@ public class reportForm extends javax.swing.JFrame {
 
         jTabbedPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
         jTabbedPane1.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        jTabbedPane1.setFont(new java.awt.Font("Trajan Pro", 0, 11)); // NOI18N
 
         jPanel_graph.setBackground(new java.awt.Color(0, 255, 255));
 
+        jLabel_loding_graph.setFont(new java.awt.Font("Trajan Pro", 0, 11)); // NOI18N
         jLabel_loding_graph.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/black-018-loading-p.gif"))); // NOI18N
+        jLabel_loding_graph.setText("loading....");
+        jLabel_loding_graph.setMaximumSize(new java.awt.Dimension(150, 100));
+        jLabel_loding_graph.setMinimumSize(new java.awt.Dimension(150, 100));
+        jLabel_loding_graph.setPreferredSize(new java.awt.Dimension(150, 100));
 
         javax.swing.GroupLayout jPanel_loading_graphLayout = new javax.swing.GroupLayout(jPanel_loading_graph);
         jPanel_loading_graph.setLayout(jPanel_loading_graphLayout);
         jPanel_loading_graphLayout.setHorizontalGroup(
             jPanel_loading_graphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_loading_graphLayout.createSequentialGroup()
-                .addContainerGap(436, Short.MAX_VALUE)
-                .addComponent(jLabel_loding_graph, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(478, 478, 478))
+                .addContainerGap(392, Short.MAX_VALUE)
+                .addComponent(jLabel_loding_graph, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(455, 455, 455))
         );
         jPanel_loading_graphLayout.setVerticalGroup(
             jPanel_loading_graphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_loading_graphLayout.createSequentialGroup()
                 .addGap(95, 95, 95)
                 .addComponent(jLabel_loding_graph, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addContainerGap(145, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel_graphLayout = new javax.swing.GroupLayout(jPanel_graph);
@@ -224,23 +235,25 @@ public class reportForm extends javax.swing.JFrame {
 
         jPanel_table.setBackground(new java.awt.Color(0, 255, 255));
 
+        jLabel_load_table.setFont(new java.awt.Font("Trajan Pro", 0, 11)); // NOI18N
         jLabel_load_table.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/black-018-loading-p.gif"))); // NOI18N
+        jLabel_load_table.setText("loading...");
 
         javax.swing.GroupLayout jPanel_loading_tableLayout = new javax.swing.GroupLayout(jPanel_loading_table);
         jPanel_loading_table.setLayout(jPanel_loading_tableLayout);
         jPanel_loading_tableLayout.setHorizontalGroup(
             jPanel_loading_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_loading_tableLayout.createSequentialGroup()
-                .addContainerGap(425, Short.MAX_VALUE)
-                .addComponent(jLabel_load_table, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(482, 482, 482))
+                .addContainerGap(388, Short.MAX_VALUE)
+                .addComponent(jLabel_load_table, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(457, 457, 457))
         );
         jPanel_loading_tableLayout.setVerticalGroup(
             jPanel_loading_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_loading_tableLayout.createSequentialGroup()
                 .addGap(91, 91, 91)
-                .addComponent(jLabel_load_table, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(147, Short.MAX_VALUE))
+                .addComponent(jLabel_load_table, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(149, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel_tableLayout = new javax.swing.GroupLayout(jPanel_table);
@@ -303,9 +316,11 @@ public class reportForm extends javax.swing.JFrame {
         jSplitPane1.setRightComponent(jPanelR);
 
         jMenu1.setText("File");
+        jMenu1.setFont(new java.awt.Font("Trajan Pro", 0, 12)); // NOI18N
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Edit");
+        jMenu2.setFont(new java.awt.Font("Tekton Pro", 0, 12)); // NOI18N
         jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
@@ -314,7 +329,7 @@ public class reportForm extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1273, Short.MAX_VALUE)
                 .addContainerGap())
         );
