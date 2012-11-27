@@ -19,6 +19,7 @@ public class ManageDB {
    private Statement stmt = null;
    private String sql;
    private boolean res = true;
+   private ResultSet rs;
    public void ManageDB(){
        try{
              //load Class driver
@@ -49,7 +50,7 @@ public class ManageDB {
         //Connect db
         this.url = "jdbc:mysql://" + serverIP + "/"+NameDB;
         this.conn= DriverManager.getConnection(this.url, this.User, this.Pass);
-                      
+        this.stmt = this.conn.createStatement();              
         }
         catch(Exception ex){
             res = false;
@@ -88,6 +89,7 @@ public class ManageDB {
                    + "status ENUM('START','END') , "
                    + "lost_min int , "
                    + "start_time TIMESTAMP , "
+                   + "watt int , "
                    + "PRIMARY KEY (Id) "
                    + ") ";
            this.stmt.executeUpdate(this.sql);
@@ -134,10 +136,13 @@ public class ManageDB {
    public int getDelay(){
        
        try {
+           
            this.sql = "select delay from sever_info";
-           ResultSet rs = this.stmt.executeQuery(sql);
-           return Integer.parseInt(rs.getString("delay"));
+           this.rs = this.stmt.executeQuery(this.sql);
+           this.rs.next(); 
+           return Integer.parseInt(this.rs.getString("delay"));
        } catch (Exception ex) {
+           ex.printStackTrace();
            return 0;
        }
    }
@@ -146,23 +151,29 @@ public class ManageDB {
 
        try {
            this.sql = "select MAX(id) from client_info where MAC = '"+mac_address+"'";
-           ResultSet rs = this.stmt.executeQuery(sql);
-           rs.next();
-           return Integer.parseInt(rs.getString(1));
+           this.rs = this.stmt.executeQuery(this.sql);
+           this.rs.next();
+           return Integer.parseInt(this.rs.getString(1));
        } catch (Exception ex) {
-           ex.printStackTrace();
+           //System.out.println(ex.toString()+" getCuurErr");
+           //System.out.println(rs.toString());
            return 0;
        }
    }
    
-   public ResultSetMetaData getSelectdata(String sql){
-       ResultSetMetaData rs = null;
+   public ResultSet getSelectdata(String sql){
+
        try {
-           rs = this.stmt.executeQuery(sql).getMetaData();
+           this.rs = this.stmt.executeQuery(sql);
+           return this.rs;
        } catch (Exception ex) {
-           rs = null;
+         
+           ex.printStackTrace();
+           
+           return this.rs;
+           //rs = null;
        }      
-       return rs;
+       
    }
    
    public void closeDB(){
