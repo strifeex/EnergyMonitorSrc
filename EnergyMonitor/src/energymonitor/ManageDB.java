@@ -132,6 +132,7 @@ public class ManageDB {
        try {
            this.sql = "select delay from sever_info";
            ResultSet rs = this.stmt.executeQuery(sql);
+           rs.next();
            return Integer.parseInt(rs.getString("delay"));
        } catch (Exception ex) {
            return 0;
