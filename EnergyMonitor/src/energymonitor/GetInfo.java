@@ -84,6 +84,8 @@ public class GetInfo {
 
         }
 
+        GetInfo.MAC_client = GetInfo.MAC_client.equals("") ? " not connect network " : GetInfo.MAC_client ;
+        
         return GetInfo.MAC_client;
     }
     

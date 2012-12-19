@@ -1,11 +1,22 @@
 
 package energymonitor_sever;
 
+import javax.swing.UIManager;
+
 
 public class EnergyMonitor_sever {
 
-
+    public static void setNimbusUI(){
+        try {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception ex) {
+        }
+    }
+    
     public static void main(String[] args) {
-        // TODO code application logic here
+        
+        setNimbusUI();
+        reportForm rp_form = new reportForm();
+        rp_form.setVisible(true);
     }
 }
