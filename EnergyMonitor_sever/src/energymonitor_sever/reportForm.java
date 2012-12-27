@@ -13,6 +13,7 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -36,32 +37,38 @@ import javax.swing.table.DefaultTableModel;
 public class reportForm extends javax.swing.JFrame {
 
     ManageDB mdb = new ManageDB();
-    String sql = "";
+    static String sql = "";
 
     Object[] data = new Object[0];
     Calendar cal = Calendar.getInstance();
     
     JPanel p = new JPanel();
+    GroupLayout layout = new GroupLayout(p);
+    
     JDateChooser cld = new JDateChooser(cal.getTime());
     JDateChooser cld2 = new JDateChooser(cal.getTime());
     JLabel lbl_in_p = new JLabel();
+    JLabel lbl_blank = new JLabel();
     JLabel lbl_in_p2 = new JLabel();
     JButton btn_ok_p = new JButton("OK");
+    NewJPanel np = new NewJPanel();
     
     public void createFilterPanel(){
-    
+        
+        
         p.setSize(400, this.getHeight()-500);
         p.setLocation(0, 200);
         
-        Dimension dime_cld = new Dimension(150, 30);
+        Dimension dime_cld = new Dimension(250, 30);
         cld.setPreferredSize(dime_cld);
         cld2.setPreferredSize(dime_cld);
-        //cld.setAlignmentX(TOP_ALIGNMENT);
-        //cld.setAlignmentY(RIGHT_ALIGNMENT);
+        cld.setAlignmentX(TOP_ALIGNMENT);
+        cld.setAlignmentY(LEFT_ALIGNMENT);
+        cld2.setAlignmentX(TOP_ALIGNMENT);
+        cld2.setAlignmentY(LEFT_ALIGNMENT);
                 
         jPanelR.add(p);
         jPanelR.setComponentZOrder(p, 0);
-        
     
         btn_ok_p.setPreferredSize(dime_cld);
         btn_ok_p.addActionListener(new ActionListener() {
@@ -85,13 +92,51 @@ public class reportForm extends javax.swing.JFrame {
             }
         });      
         
-        lbl_in_p.setText("From  ");
-        lbl_in_p2.setText(" To ");
-        p.add(lbl_in_p);
-        p.add(cld);
-        p.add(lbl_in_p2);
-        p.add(cld2);
-        p.add(btn_ok_p);
+        lbl_in_p.setText("From     ");
+        lbl_in_p2.setText("To");
+        
+        //p.add(lbl_blank);
+//        p.add(lbl_in_p);
+//        p.add(cld);
+//        p.add(lbl_in_p2);
+//        p.add(cld2);
+//        p.add(btn_ok_p);
+        
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(p);
+        p.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(70, 70, 70)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_in_p)
+                            .addComponent(lbl_in_p2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cld2, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                            .addComponent(cld, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(127, 127, 127)
+                        .addComponent(btn_ok_p, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(79, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(51, 51, 51)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cld, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                    .addComponent(lbl_in_p, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbl_in_p2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cld2, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addComponent(btn_ok_p, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(49, Short.MAX_VALUE))
+        );
     }
     /**
      * Creates new form reportForm
@@ -122,10 +167,13 @@ public class reportForm extends javax.swing.JFrame {
         jToggleViewActionPerformed(null);
 
         this.createFilterPanel();
+//        np.setLocation(0, 200);
+//        jPanelR.add(np);
+//        jPanelR.setComponentZOrder(np, 0);
         
         jTable1.setEnabled(false);
         
-        
+
         
     }
 
@@ -503,13 +551,18 @@ public class reportForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jToggleViewActionPerformed
 
+   
     private void jToggleFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleFilterActionPerformed
             
         //System.out.println(jPanelR.getComponentCount()+"  comp  Oder");
-        if(jToggleFilter.isSelected()){            
+        if(jToggleFilter.isSelected()){
+            
+            //np.setVisible(true);
+            
             p.setVisible(true);
         }else{
             p.setVisible(false);
+             //np.setVisible(false);
         }
     }//GEN-LAST:event_jToggleFilterActionPerformed
 
@@ -619,6 +672,6 @@ public class reportForm extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JToggleButton jToggleClientlist;
     private javax.swing.JToggleButton jToggleFilter;
-    private javax.swing.JToggleButton jToggleView;
+    public static javax.swing.JToggleButton jToggleView;
     // End of variables declaration//GEN-END:variables
 }
