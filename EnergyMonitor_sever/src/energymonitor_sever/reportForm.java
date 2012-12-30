@@ -30,6 +30,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.util.Rotation;
 
 /**
  *
@@ -39,6 +45,7 @@ public class reportForm extends javax.swing.JFrame {
 
     ManageDB mdb = new ManageDB();
     static String sql = "";
+    static String sqlClient = "";
 
     Object[] data = new Object[0];
     Calendar cal = Calendar.getInstance();
@@ -60,20 +67,11 @@ public class reportForm extends javax.swing.JFrame {
         jPanelBorder.setBorder(javax.swing.BorderFactory.createTitledBorder(" "));
         
         p.setSize(400, this.getHeight()-500);
-        p.setLocation(0, 200);
-        
-//        Dimension dime_cld = new Dimension(250, 30);
-//        cld.setPreferredSize(dime_cld);
-//        cld2.setPreferredSize(dime_cld);
-//        cld.setAlignmentX(TOP_ALIGNMENT);
-//        cld.setAlignmentY(LEFT_ALIGNMENT);
-//        cld2.setAlignmentX(TOP_ALIGNMENT);
-//        cld2.setAlignmentY(LEFT_ALIGNMENT);
+        p.setLocation(0,0);
                 
         jPanelR.add(p);
         jPanelR.setComponentZOrder(p, 0);
     
-//        btn_ok_p.setPreferredSize(dime_cld);
         btn_ok_p.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
@@ -88,23 +86,20 @@ public class reportForm extends javax.swing.JFrame {
                 txt_sql += "from client_info where time  between '"+ str_date1 +" 00:00:00'";
                 txt_sql += " and '"+ str_date2 +" 23:59:59' group by MAC";
                 reportForm.this.sql = txt_sql;
-                System.out.println(reportForm.this.sql);
+                selectView(reportForm.this.sql);               
+                //System.out.println(reportForm.this.sql);
+                Calendar calendar = Calendar.getInstance();
+                reportForm.this.sqlClient = "select name , detail from client_info where time between '"+sdf.format(calendar.getTime()) +" 00:00:00'";
+                reportForm.this.sqlClient += " and '"+ sdf.format(calendar.getTime()) +" 23:59:59' group by MAC";
 
                 p.setVisible(false);
                 jToggleView.setSelected(true);
-                jToggleViewActionPerformed(null);
+                
             }
         });      
   
         lbl_in_p.setText("From     ");
         lbl_in_p2.setText("To");
-        
-        //p.add(lbl_blank);
-//        p.add(lbl_in_p);
-//        p.add(cld);
-//        p.add(lbl_in_p2);
-//        p.add(cld2);
-//        p.add(btn_ok_p);
         
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanelBorder);
         jPanelBorder.setLayout(jPanel1Layout);
@@ -193,15 +188,18 @@ public class reportForm extends javax.swing.JFrame {
         }        
         
         this.sql = "select name , detail , sum(lost_min) as lost_min , watt from client_info group by MAC";
+        this.sqlClient = "select name , detail from client_info";
         
         this.mdb.setMysqlPrivileges();
-        jToggleView.setSelected(true);
-        jToggleViewActionPerformed(null);
+        //jToggleView.setSelected(true);
+        //jToggleViewActionPerformed(null);
 
         this.createFilterPanel();
         
         jTable1.setEnabled(false);
-               
+        p.setVisible(false);
+        
+        selectView(this.sql);       
     }
 
     /**
@@ -217,7 +215,7 @@ public class reportForm extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel_L = new javax.swing.JPanel();
         jToggleView = new javax.swing.JToggleButton();
-        jToggleFilter = new javax.swing.JToggleButton();
+        jToggleSetting = new javax.swing.JToggleButton();
         jToggleClientlist = new javax.swing.JToggleButton();
         jPanelR = new javax.swing.JPanel();
         jPanelR_Down = new javax.swing.JPanel();
@@ -254,24 +252,14 @@ public class reportForm extends javax.swing.JFrame {
             }
         });
 
-        buttonGroup1.add(jToggleFilter);
-        jToggleFilter.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
-        jToggleFilter.setText("Filter");
-        jToggleFilter.setMaximumSize(new java.awt.Dimension(55, 23));
-        jToggleFilter.setMinimumSize(new java.awt.Dimension(55, 23));
-        jToggleFilter.setPreferredSize(new java.awt.Dimension(55, 23));
-        jToggleFilter.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                jToggleFilterStateChanged(evt);
-            }
-        });
-        jToggleFilter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleFilterActionPerformed(evt);
-            }
-        });
+        jToggleSetting.setBackground(new java.awt.Color(0, 153, 153));
+        buttonGroup1.add(jToggleSetting);
+        jToggleSetting.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
+        jToggleSetting.setText("Setting");
+        jToggleSetting.setMaximumSize(new java.awt.Dimension(55, 23));
+        jToggleSetting.setMinimumSize(new java.awt.Dimension(55, 23));
+        jToggleSetting.setPreferredSize(new java.awt.Dimension(55, 23));
 
-        jToggleClientlist.setBackground(new java.awt.Color(0, 153, 153));
         buttonGroup1.add(jToggleClientlist);
         jToggleClientlist.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
         jToggleClientlist.setText("ClientList");
@@ -290,7 +278,7 @@ public class reportForm extends javax.swing.JFrame {
                 .addGroup(jPanel_LLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jToggleClientlist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jToggleView, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jToggleFilter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jToggleSetting, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel_LLayout.setVerticalGroup(
@@ -301,7 +289,7 @@ public class reportForm extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToggleClientlist, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(39, 39, 39)
-                .addComponent(jToggleFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jToggleSetting, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(426, Short.MAX_VALUE))
         );
 
@@ -309,7 +297,7 @@ public class reportForm extends javax.swing.JFrame {
 
         jPanelR.setBackground(new java.awt.Color(0, 0, 0));
 
-        jPanelR_Down.setBackground(new java.awt.Color(0, 102, 102));
+        jPanelR_Down.setBackground(new java.awt.Color(0, 153, 153));
 
         javax.swing.GroupLayout jPanelR_DownLayout = new javax.swing.GroupLayout(jPanelR_Down);
         jPanelR_Down.setLayout(jPanelR_DownLayout);
@@ -522,7 +510,12 @@ public class reportForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectView(String str_sql){
-               
+        
+            jLabel_loding_graph.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
+            jLabel_loding_graph.setText("");
+            jLabel_load_table.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
+            jLabel_load_table.setText("");
+            
             String[] Columname = {"No", "Name", "Detail", "losttime (min)", "Unit"};
             DefaultTableModel model = new DefaultTableModel(Columname, 0);
             jTable1.setModel(model);      
@@ -565,87 +558,129 @@ public class reportForm extends javax.swing.JFrame {
             }
     }
     
+    private void selectClientlist(String str_sql){
+    
+        jLabel_loding_graph.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
+        jPanel_loading_table.setVisible(true);
+        jScrollPane1.setVisible(false);
+        jPanel_loading_graph.setVisible(true);
+        jPanel1.setVisible(false);
+        jPanel1.setVisible(true);
+
+        String[] Columname = {"No", "Name", "Detail"};
+        DefaultTableModel model = new DefaultTableModel(Columname, 0);
+        jTable1.setModel(model);
+
+        String sql_client = "select name , detail from client_info group by MAC";
+        ResultSet rs = mdb.getSelectdata(sql_client);
+
+
+        int c = 0;
+        try {
+
+            while (rs.next()) {
+
+                model.addRow(data);
+                jTable1.setValueAt(c + 1 + "", c, 0);
+                jTable1.setValueAt(rs.getString("name"), c, 1);
+                jTable1.setValueAt(rs.getString("detail"), c, 2);
+                c++;
+                //System.out.println(unit+"  : unit \n"+watt+" : watt  \n"+hr+" : hr");
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showConfirmDialog((Component) null, "Error", "Alert", JOptionPane.DEFAULT_OPTION);
+            ex.printStackTrace();
+        }
+        
+        rs = mdb.getSelectdata(str_sql);
+        
+        int c_cuurent = 0;
+        try {
+            rs.last();
+            c_cuurent = rs.getRow();
+        } catch (Exception ex) {
+        }
+
+
+        //jPanel_table.setVisible(true);
+
+        if (c <= 0) {
+            //jPanel_table.setVisible(false);
+            jScrollPane1.setVisible(false);
+            jLabel_load_table.setIcon(null);
+            jLabel_load_table.setText("                         No Data");
+            jPanel_loading_table.setVisible(true);
+
+            jLabel_loding_graph.setIcon(null);
+            jLabel_loding_graph.setText("                         No Data");
+            jLabel_loding_graph.setVisible(true);
+
+        } else {
+
+            DefaultPieDataset pieDataset = new DefaultPieDataset();
+            pieDataset.setValue("All user", c);
+            pieDataset.setValue("Current user", c - c_cuurent);
+
+            JFreeChart chart = ChartFactory.createPieChart3D("User ratio", pieDataset, true, true, true);
+            ChartPanel chartP = new ChartPanel(chart);
+            PiePlot3D plot = (PiePlot3D) chart.getPlot();  
+            plot.setForegroundAlpha(0.60f);
+            //p.setDirection(Rotation.CLOCKWISE);
+            plot.setSectionPaint("All user", Color.green);
+            plot.setSectionPaint("Current user", Color.red);
+            
+            //roration animation
+//            final Rotator rotator = new Rotator(plot);
+//            rotator.start();
+            
+            chartP.setSize(jPanel_graph.getSize());
+            this.jPanel_graph.add(chartP, -1);
+            chartP.setVisible(true);
+
+            jPanel_loading_table.setVisible(false);
+            jPanel_loading_graph.setVisible(false);
+            jScrollPane1.setVisible(true);
+        }
+    }
     
     private void jToggleViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleViewActionPerformed
-        p.setVisible(false);
+        //p.setVisible(false);
         //jPanel_table.setEnabled(false);
-        jPanel_loading_table.setVisible(true);
+        //jPanel_loading_table.setVisible(true);
                 
         if (jToggleView.isSelected()) {
-
-            selectView(this.sql);
             
+            if(this.jPanel_graph.getComponentCount()>1){
+                        this.jPanel_graph.remove(1);
+            }
+
+            jLabel_loding_graph.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
+            jPanel_loading_table.setVisible(true);
+            jScrollPane1.setVisible(false);
+            jPanel_loading_graph.setVisible(true);
+            jPanel1.setVisible(false);
+            jPanel1.setVisible(true);
+            
+            p.setVisible(true);
+            
+        }else{
+            p.setVisible(false);
+             //np.setVisible(false);
         }
         
     }//GEN-LAST:event_jToggleViewActionPerformed
 
    
-    private void jToggleFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleFilterActionPerformed
-            
-        //System.out.println(jPanelR.getComponentCount()+"  comp  Oder");
-        if(jToggleFilter.isSelected()){
-            
-            //np.setVisible(true);
-            
-            p.setVisible(true);
-        }else{
-            p.setVisible(false);
-             //np.setVisible(false);
-        }
-    }//GEN-LAST:event_jToggleFilterActionPerformed
-
     private void jToggleClientlistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleClientlistActionPerformed
 
         p.setVisible(false);
-        jPanel_loading_table.setVisible(true);
-        jScrollPane1.setVisible(false);
         
         if(jToggleClientlist.isSelected()){
             
-            String[] Columname = {"No", "Name", "Detail"};
-            DefaultTableModel model = new DefaultTableModel(Columname, 0);
-            jTable1.setModel(model);
-            
-            String sql_client = "select name , detail from client_info";
-            ResultSet rs = mdb.getSelectdata(sql_client);
-            
-            int c = 0;
-            try {                 
-               
-                while (rs.next()) {
-     
-                    model.addRow(data);
-                    jTable1.setValueAt(c + 1 + "", c, 0);
-                    jTable1.setValueAt(rs.getString("name"), c, 1);
-                    jTable1.setValueAt(rs.getString("detail"), c, 2);
-                    c++;
-                    //System.out.println(unit+"  : unit \n"+watt+" : watt  \n"+hr+" : hr");
-                }
-
-            } catch (SQLException ex) {
-                JOptionPane.showConfirmDialog((Component) null, "Error", "Alert", JOptionPane.DEFAULT_OPTION);
-                ex.printStackTrace();
-            }
-            
-            jPanel_loading_table.setVisible(false);
-            jScrollPane1.setVisible(true);
-            //jPanel_table.setVisible(true);
-            
-            if(c<=0){
-                //jPanel_table.setVisible(false);
-                jScrollPane1.setVisible(false);
-                jLabel_load_table.setIcon(null);
-                jLabel_load_table.setText("                         No Data");
-                jPanel_loading_table.setVisible(true);
-                
-            }
-            
+            selectClientlist(this.sqlClient);
         }
     }//GEN-LAST:event_jToggleClientlistActionPerformed
-
-    private void jToggleFilterStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jToggleFilterStateChanged
-
-    }//GEN-LAST:event_jToggleFilterStateChanged
 
     /**
      * @param args the command line arguments
@@ -699,7 +734,7 @@ public class reportForm extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JToggleButton jToggleClientlist;
-    private javax.swing.JToggleButton jToggleFilter;
+    private javax.swing.JToggleButton jToggleSetting;
     public static javax.swing.JToggleButton jToggleView;
     // End of variables declaration//GEN-END:variables
 }
