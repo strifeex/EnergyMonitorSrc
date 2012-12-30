@@ -18,7 +18,7 @@ public class GetInfo {
     static String ip_client;
     static String MAC_client ;
     static InetAddress ia;
-    static String server_ip = "";
+    static String server_ip = "Please input ServerIP";
     static String name_txt = "";
     static String detail_txt = "";
     static String filesave_name = "ipconnect.in";
@@ -31,6 +31,7 @@ public class GetInfo {
             GetInfo.detail_txt = sc.nextLine();
         }
         catch(Exception ex){
+            //JOptionPane.showConfirmDialog((Component) null, "loadSeverIP = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
             File file = new File(filesave_name);
             
         }
@@ -47,8 +48,7 @@ public class GetInfo {
             out.close(); 
         }
         catch(Exception ex){
-             JOptionPane.showConfirmDialog((Component)
-                null, ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
+            JOptionPane.showConfirmDialog((Component) null, "saveServerIP = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
         }
     }
     
@@ -80,6 +80,7 @@ public class GetInfo {
             
         } catch (UnknownHostException | SocketException e) {
 
+            JOptionPane.showConfirmDialog((Component) null, "getMAC = "+e.toString(), "alert", JOptionPane.DEFAULT_OPTION);
             GetInfo.MAC_client = e.toString();
 
         }

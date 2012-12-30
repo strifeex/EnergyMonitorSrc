@@ -1,8 +1,10 @@
 
 package energymonitor;
 
-//import java.awt.TrayIcon;
+import java.awt.Component;
+import java.awt.TrayIcon;
 import java.util.TimerTask;
+import javax.swing.JOptionPane;
 
 public class TaskProcess extends TimerTask {
     
@@ -17,15 +19,18 @@ public class TaskProcess extends TimerTask {
     public void run() {
         // เชค ว่ามี Database 
         boolean chk_db = this.mdb.CheckDB(GetInfo.loadSeverIP(), "energymonitor");
+        
+        //JOptionPane.showConfirmDialog((Component) null, "testTask", "alert", JOptionPane.DEFAULT_OPTION);
 
         if (chk_db) {
             
             //query time from sever  for send data times
             // กำหนด ระยะเวลาที่ ไม่มีการขยับ เคอเซอร์  จาก  sever  กำหนดเป็นนาที
             // นำมาเปลี่ยนเป็นวินาที  
-            //this.second = this.mdb.getDelay() != 0 ? this.mdb.getDelay()*60 : this.second ;
+            this.second = this.mdb.getDelay() != 0 ? this.mdb.getDelay()*60 : this.second ;
             // systemtray icon เป็นสีเขียว  เพื่อแสดงว่าสามารถติดต่อ server ได้
-            ImageDisplay.setTrayImage("green-energy_icon.png");
+            //EnergyMonitor.class.getResource("green-energy_icon.png");
+            ImageDisplay.setTrayImage("/img/green-energy_icon.png");
             ImageDisplay.statusTrayImg = true;
             EnergyMonitor.trayIcon.setImage(ImageDisplay.getTrayImage());
             // เก็บตำแหน่ง x , y ของ cursor   เป็น array
@@ -39,13 +44,15 @@ public class TaskProcess extends TimerTask {
                     //
                     status = "START";
                     this.tmp_MAC = GetInfo.getMAC();
-                    this.mdb.insertData("insert into client_info(MAC,name,detail,status,lost_min,start_time)"
+
+                    this.mdb.insertData("insert into client_info(MAC,name,detail,status,lost_min,cost_unit,start_time)"
                             + " values('" + tmp_MAC + "',"
                             + "'"+GetInfo.name_txt+"',"
                             + "'"+GetInfo.detail_txt+"',"
                             + "'" + status + "',"
                             + "'" + (times / 60) + "',"
-                            + "SUBDATE(NOW(),INTERVAL " + times + " SECOND)) ");
+                            + "'"+this.mdb.getCost_unit()+"',"
+                            + "SUBDATE(NOW(),INTERVAL " + times + " SECOND) )");
 
                     this.tmp_id = this.mdb.getCurrentid(tmp_MAC);
 
@@ -58,7 +65,8 @@ public class TaskProcess extends TimerTask {
                             + "name = '" + GetInfo.name_txt + "' , "
                             + "detail = '"+GetInfo.detail_txt+"' , "
                             + "lost_min = " + (times / 60) + " , "
-                            + "start_time = SUBDATE(NOW(),INTERVAL " + times + " SECOND) "
+                            + "start_time = SUBDATE(NOW(),INTERVAL " + times + " SECOND) ,"
+                            + "cost_unit = " + this.mdb.getCost_unit() + " "
                             + "where Id = " + this.tmp_id + "");
 
                     this.tmp_MAC = "";
@@ -76,7 +84,8 @@ public class TaskProcess extends TimerTask {
             this.mousePos[1] = mousecurent[1];
             
         }else{
-            ImageDisplay.setTrayImage("green-energy-icon-discoon.png");
+
+            ImageDisplay.setTrayImage("/img/green-energy-icon-discoon.png");
             ImageDisplay.statusTrayImg = false;
             //EnergyMonitor.trayIcon.displayMessage("connection", "not connect", TrayIcon.MessageType.ERROR);
             EnergyMonitor.trayIcon.setImage(ImageDisplay.getTrayImage());

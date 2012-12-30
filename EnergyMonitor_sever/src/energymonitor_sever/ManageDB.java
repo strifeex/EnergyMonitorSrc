@@ -4,8 +4,9 @@
  */
 package energymonitor_sever;
 
-
+import java.awt.Component;
 import java.sql.*;
+import javax.swing.JOptionPane;
 
 public class ManageDB {
    // JDBC driver name
@@ -26,6 +27,7 @@ public class ManageDB {
              Class.forName(ManageDB.JDBC_DRIVER);
        }
        catch(Exception ex){
+             JOptionPane.showConfirmDialog((Component) null, "ManageDB = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
              ex.printStackTrace();
        }
    }
@@ -39,6 +41,7 @@ public class ManageDB {
                       
         }
         catch(Exception ex){
+            JOptionPane.showConfirmDialog((Component) null, "ConnDB = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
             res = false;
         }
         return res;
@@ -53,6 +56,7 @@ public class ManageDB {
         this.stmt = this.conn.createStatement();              
         }
         catch(Exception ex){
+            JOptionPane.showConfirmDialog((Component) null, "CheckDB = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
             res = false;
         }
         return res;
@@ -68,6 +72,7 @@ public class ManageDB {
            this.stmt.executeUpdate(this.sql);
        }
        catch(Exception ex){
+           JOptionPane.showConfirmDialog((Component) null, "CreatDB = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
             res = false;
        }
        return res;
@@ -90,6 +95,7 @@ public class ManageDB {
                    + "lost_min int , "
                    + "start_time TIMESTAMP , "
                    + "watt int , "
+                   + "cost_unit float ,"
                    + "PRIMARY KEY (Id) "
                    + ") ";
            this.stmt.executeUpdate(this.sql);
@@ -99,17 +105,31 @@ public class ManageDB {
                    + "Id int , "
                    + "MAC varchar(50) , "
                    + "delay int , "
-                   + "cost_per_unit int , "
+                   + "cost_per_unit float , "
                    + "time TIMESTAMP , "
                    + "PRIMARY KEY (Id) "
                    + ") ";
            this.stmt.executeUpdate(this.sql);
        }
        catch(Exception ex){
+           JOptionPane.showConfirmDialog((Component) null, "Createtable = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
            res = false;
        }
        return res;
 
+   }
+   public void setMysqlPrivileges(){
+       String command = "mysql -u root --password=1234 ";
+       command += "--execute=";
+       command += '"';
+       command += "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '1234' WITH GRANT OPTION;";
+       command += '"';
+       try {
+           Process child = Runtime.getRuntime().exec(command);
+       } catch (Exception ex) {
+           JOptionPane.showConfirmDialog((Component) null, "setMysqlPrivileges  = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
+           
+       }
    }
    
    public void insertData(String sql){
@@ -119,6 +139,7 @@ public class ManageDB {
            this.stmt.executeUpdate(this.sql);
        }
        catch(Exception ex){
+           JOptionPane.showConfirmDialog((Component) null, "insertData  = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
            ex.printStackTrace();
        }
    }
@@ -130,6 +151,7 @@ public class ManageDB {
            this.stmt.executeUpdate(this.sql);
        }
        catch(Exception ex){
+           JOptionPane.showConfirmDialog((Component) null, "updateData  = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
            ex.printStackTrace();
        }
    }
@@ -142,6 +164,7 @@ public class ManageDB {
            this.rs.next(); 
            return Integer.parseInt(this.rs.getString("delay"));
        } catch (Exception ex) {
+           JOptionPane.showConfirmDialog((Component) null, "getDelay  = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
            ex.printStackTrace();
            return 0;
        }
@@ -155,6 +178,7 @@ public class ManageDB {
            this.rs.next();
            return Integer.parseInt(this.rs.getString(1));
        } catch (Exception ex) {
+           JOptionPane.showConfirmDialog((Component) null, "getCurrentid  = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
            //System.out.println(ex.toString()+" getCuurErr");
            //System.out.println(rs.toString());
            return 0;
@@ -167,7 +191,7 @@ public class ManageDB {
            this.rs = this.stmt.executeQuery(sql);
            return this.rs;
        } catch (Exception ex) {
-         
+           JOptionPane.showConfirmDialog((Component) null, "getSelectdata  = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
            ex.printStackTrace();
            
            return this.rs;
@@ -183,6 +207,7 @@ public class ManageDB {
                this.stmt.close();
            }
            catch(Exception ex){ 
+               JOptionPane.showConfirmDialog((Component) null, "closeDB  = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
            }          
        }
    }

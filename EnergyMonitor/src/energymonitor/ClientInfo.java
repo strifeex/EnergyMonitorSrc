@@ -4,6 +4,8 @@
  */
 package energymonitor;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import javax.swing.ImageIcon;
@@ -29,7 +31,8 @@ public class ClientInfo extends javax.swing.JFrame {
         String tmp_name = GetInfo.name_txt.equals("") ? GetInfo.getClientName() : GetInfo.name_txt;
         txt_name.setText(tmp_name);
         txt_detail.setText(GetInfo.detail_txt);
-        
+        Image icon_Image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/green-energy_logo.png"));
+        this.setIconImage(icon_Image);
               
     }
 
@@ -180,11 +183,11 @@ public class ClientInfo extends javax.swing.JFrame {
     private void btn_testIPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_testIPActionPerformed
         
         if (db.CheckDB(txt_IP.getText(),"EnergyMonitor")) {
-            ImageIcon icon = new ImageIcon("correctlogo.png");
+            ImageIcon icon = new ImageIcon(EnergyMonitor.class.getResource("/img/correctlogo.png"));
             lbl_IPconn.setIcon(icon);           
             GetInfo.saveServerIP(txt_IP.getText(),txt_name.getText(),txt_detail.getText());
         } else {
-            ImageIcon icon = new ImageIcon("incorrectuse.png");
+            ImageIcon icon = new ImageIcon(EnergyMonitor.class.getResource("/img/incorrectuse.png"));
             lbl_IPconn.setIcon(icon);
         }
     }//GEN-LAST:event_btn_testIPActionPerformed

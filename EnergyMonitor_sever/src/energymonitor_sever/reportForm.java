@@ -8,6 +8,7 @@ import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -55,22 +56,24 @@ public class reportForm extends javax.swing.JFrame {
     
     public void createFilterPanel(){
         
+        JPanel jPanelBorder = new javax.swing.JPanel();
+        jPanelBorder.setBorder(javax.swing.BorderFactory.createTitledBorder(" "));
         
         p.setSize(400, this.getHeight()-500);
         p.setLocation(0, 200);
         
-        Dimension dime_cld = new Dimension(250, 30);
-        cld.setPreferredSize(dime_cld);
-        cld2.setPreferredSize(dime_cld);
-        cld.setAlignmentX(TOP_ALIGNMENT);
-        cld.setAlignmentY(LEFT_ALIGNMENT);
-        cld2.setAlignmentX(TOP_ALIGNMENT);
-        cld2.setAlignmentY(LEFT_ALIGNMENT);
+//        Dimension dime_cld = new Dimension(250, 30);
+//        cld.setPreferredSize(dime_cld);
+//        cld2.setPreferredSize(dime_cld);
+//        cld.setAlignmentX(TOP_ALIGNMENT);
+//        cld.setAlignmentY(LEFT_ALIGNMENT);
+//        cld2.setAlignmentX(TOP_ALIGNMENT);
+//        cld2.setAlignmentY(LEFT_ALIGNMENT);
                 
         jPanelR.add(p);
         jPanelR.setComponentZOrder(p, 0);
     
-        btn_ok_p.setPreferredSize(dime_cld);
+//        btn_ok_p.setPreferredSize(dime_cld);
         btn_ok_p.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
@@ -85,13 +88,14 @@ public class reportForm extends javax.swing.JFrame {
                 txt_sql += "from client_info where time  between '"+ str_date1 +" 00:00:00'";
                 txt_sql += " and '"+ str_date2 +" 23:59:59' group by MAC";
                 reportForm.this.sql = txt_sql;
+                System.out.println(reportForm.this.sql);
 
                 p.setVisible(false);
                 jToggleView.setSelected(true);
                 jToggleViewActionPerformed(null);
             }
         });      
-        
+  
         lbl_in_p.setText("From     ");
         lbl_in_p2.setText("To");
         
@@ -102,40 +106,57 @@ public class reportForm extends javax.swing.JFrame {
 //        p.add(cld2);
 //        p.add(btn_ok_p);
         
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanelBorder);
+        jPanelBorder.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_in_p, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_in_p2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(cld2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cld, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(57, 57, 57)
+                        .addComponent(btn_ok_p, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cld, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_in_p, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbl_in_p2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cld2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
+                .addComponent(btn_ok_p, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(p);
         p.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(70, 70, 70)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_in_p)
-                            .addComponent(lbl_in_p2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cld2, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                            .addComponent(cld, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(127, 127, 127)
-                        .addComponent(btn_ok_p, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(79, Short.MAX_VALUE))
+                .addGap(70, 70, 70)
+                .addComponent(jPanelBorder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(55, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(51, 51, 51)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cld, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
-                    .addComponent(lbl_in_p, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(22, 22, 22)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lbl_in_p2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cld2, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE))
-                .addGap(40, 40, 40)
-                .addComponent(btn_ok_p, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(49, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(24, Short.MAX_VALUE)
+                .addComponent(jPanelBorder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49))
         );
     }
     /**
@@ -144,37 +165,43 @@ public class reportForm extends javax.swing.JFrame {
     public reportForm() {
         initComponents();
 
+        
+//        System.out.println(this.getClass().getResource("/energymonitor_sever/loading15.gif").getPath());
+//        //new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/green-energy-icon-md.png"));
+//        System.out.println(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/energymonitor_sever/green-energy-icon-md.png")));
+//        System.out.println(Toolkit.getDefaultToolkit().getImage("green-energy-icon-md.png")+"");
+//        System.exit(0);
+        
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         this.setTitle("EnergyMonitor");
         Image icon_Image = Toolkit.getDefaultToolkit().getImage("green-energy-icon-md.png");
         this.setIconImage(icon_Image);
         
+        
         if (mdb.ConnDB("localhost")) {
-            System.out.println("connnect");
+            System.out.println("connnect");        
+            if (mdb.CheckDB("localhost", "EnergyMonitor")) {
+                System.out.println("Databse coorect");
+            } else {
+                mdb.CreatDB();
+                mdb.setMysqlPrivileges();
+                System.out.println("no Database");
+            }
         } else {
-            System.out.println("not   connnect");
-        }
-        if(mdb.CheckDB("localhost", "EnergyMonitor")){
-            System.out.println("connnect");
-        }else{
-            System.out.println("not   connnect");
-        }
+            System.out.println("not  connnect");
+        }        
         
         this.sql = "select name , detail , sum(lost_min) as lost_min , watt from client_info group by MAC";
         
+        this.mdb.setMysqlPrivileges();
         jToggleView.setSelected(true);
         jToggleViewActionPerformed(null);
 
         this.createFilterPanel();
-//        np.setLocation(0, 200);
-//        jPanelR.add(np);
-//        jPanelR.setComponentZOrder(np, 0);
         
         jTable1.setEnabled(false);
-        
-
-        
+               
     }
 
     /**
@@ -546,7 +573,8 @@ public class reportForm extends javax.swing.JFrame {
                 
         if (jToggleView.isSelected()) {
 
-            selectView(this.sql);            
+            selectView(this.sql);
+            
         }
         
     }//GEN-LAST:event_jToggleViewActionPerformed

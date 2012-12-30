@@ -1,6 +1,7 @@
 package energymonitor;
 
 import java.awt.AWTException;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.MenuItem;
@@ -13,6 +14,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import java.util.Timer;
+import javax.swing.JOptionPane;
 
 public class EnergyMonitor {
     
@@ -46,11 +48,19 @@ public class EnergyMonitor {
         try {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
         } catch (Exception ex) {
+            JOptionPane.showConfirmDialog((Component) null, ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
         }
     }
     
     public static void main(String[] args) {
- 
+//        ManageDB tb = new ManageDB();
+//        if(tb.ConnDB("192.168.2.4")){
+//            System.out.println("IP test pass");
+//        }else{
+//            System.out.println("IP test No");
+//        }
+//        System.out.println();
+//        System.exit(0);
         setNimbusUI();
          
         Runnable runner;
@@ -107,16 +117,17 @@ public class EnergyMonitor {
                     //menu3
                     item = new MenuItem("About Energy Monitor");
                     item.addActionListener(new ShowMessageListener(trayIcon,
-                            "Name Title", "name", TrayIcon.MessageType.ERROR));
+                            "", "EnergyMonitor", TrayIcon.MessageType.ERROR));
                     popup.add(item);
                     //menu4
-//                    item = new MenuItem("Close");
-//                    item.addActionListener(new ActionListener() {
-//                        public void actionPerformed(ActionEvent e) {
-//                            tray.remove(trayIcon);
-//                        }
-//                    });
-//                    popup.add(item);
+                    item = new MenuItem("Close");
+                    item.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            System.exit(0);
+                            //tray.remove(trayIcon);
+                        }
+                    });
+                    popup.add(item);
                     
                     Timer timer = new Timer("sendData");
                     TaskProcess t = new TaskProcess();
@@ -125,6 +136,8 @@ public class EnergyMonitor {
                     try {
                         tray.add(trayIcon);
                     } catch (AWTException e) {
+                        JOptionPane.showConfirmDialog((Component) null, e.toString(), "alert", JOptionPane.DEFAULT_OPTION);
+                        e.printStackTrace();
                         System.err.println("Can't add to tray");
 
                     }
