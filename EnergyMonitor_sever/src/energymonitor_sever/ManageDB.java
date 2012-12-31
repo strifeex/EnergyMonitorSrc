@@ -110,6 +110,10 @@ public class ManageDB {
                    + "PRIMARY KEY (Id) "
                    + ") ";
            this.stmt.executeUpdate(this.sql);
+           
+           this.sql = "INSERT INTO sever_info(Id,MAC,delay,cost_per_unit) "
+                   + "VALUES(1 , 'MAC_INITIAL' , 1 , 3) ";
+           this.stmt.executeUpdate(this.sql);
        }
        catch(Exception ex){
            JOptionPane.showConfirmDialog((Component) null, "Createtable = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);

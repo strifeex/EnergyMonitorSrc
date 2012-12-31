@@ -96,9 +96,10 @@ public class reportForm extends javax.swing.JFrame {
                 reportForm.this.selectView(reportForm.this.sql);               
                 //System.out.println(reportForm.this.sql);
                 Calendar calendar = Calendar.getInstance();
-                reportForm.this.sqlClient = "select name , detail from client_info where time between '"+sdf.format(calendar.getTime()) +" 00:00:00'";
-                reportForm.this.sqlClient += " and '"+ sdf.format(calendar.getTime()) +" 23:59:59' group by MAC";
+                reportForm.this.sqlClient = "select name , detail from client_info where time between '"+str_date1 +" 00:00:00'";
+                reportForm.this.sqlClient += " and '"+ str_date2 +" 23:59:59' group by MAC";
 
+                System.out.println(sqlClient);
                 p.setVisible(false);
                 jToggleView.setSelected(true);
                 
@@ -161,18 +162,12 @@ public class reportForm extends javax.swing.JFrame {
                 .addGap(49, 49, 49))
         );
     }
+    
     /**
      * Creates new form reportForm
      */
     public reportForm() {
         initComponents();
-
-        
-//        System.out.println(this.getClass().getResource("/energymonitor_sever/loading15.gif").getPath());
-//        //new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/green-energy-icon-md.png"));
-//        System.out.println(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/energymonitor_sever/green-energy-icon-md.png")));
-//        System.out.println(Toolkit.getDefaultToolkit().getImage("green-energy-icon-md.png")+"");
-//        System.exit(0);
         
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
@@ -195,7 +190,7 @@ public class reportForm extends javax.swing.JFrame {
         }        
         
         this.sql = "select name , detail , sum(lost_min) as lost_min , watt from client_info group by MAC";
-        this.sqlClient = "select name , detail from client_info";
+        this.sqlClient = "select name , detail from client_info group by MAC";
         
         //this.mdb.setMysqlPrivileges();
         //jToggleView.setSelected(true);
@@ -207,6 +202,7 @@ public class reportForm extends javax.swing.JFrame {
         p.setVisible(false);
         
         //this.selectView(sql);
+        
 
     }
 
@@ -223,8 +219,8 @@ public class reportForm extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel_L = new javax.swing.JPanel();
         jToggleView = new javax.swing.JToggleButton();
-        jToggleSetting = new javax.swing.JToggleButton();
         jToggleClientlist = new javax.swing.JToggleButton();
+        btn_setting = new javax.swing.JButton();
         jPanelR = new javax.swing.JPanel();
         jPanelR_Down = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
@@ -260,14 +256,6 @@ public class reportForm extends javax.swing.JFrame {
             }
         });
 
-        jToggleSetting.setBackground(new java.awt.Color(0, 153, 153));
-        buttonGroup1.add(jToggleSetting);
-        jToggleSetting.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
-        jToggleSetting.setText("Setting");
-        jToggleSetting.setMaximumSize(new java.awt.Dimension(55, 23));
-        jToggleSetting.setMinimumSize(new java.awt.Dimension(55, 23));
-        jToggleSetting.setPreferredSize(new java.awt.Dimension(55, 23));
-
         buttonGroup1.add(jToggleClientlist);
         jToggleClientlist.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
         jToggleClientlist.setText("ClientList");
@@ -277,16 +265,25 @@ public class reportForm extends javax.swing.JFrame {
             }
         });
 
+        btn_setting.setBackground(new java.awt.Color(0, 204, 51));
+        btn_setting.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        btn_setting.setText("Setting");
+        btn_setting.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_settingActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel_LLayout = new javax.swing.GroupLayout(jPanel_L);
         jPanel_L.setLayout(jPanel_LLayout);
         jPanel_LLayout.setHorizontalGroup(
             jPanel_LLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel_LLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_LLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel_LLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_setting, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jToggleClientlist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jToggleView, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jToggleSetting, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jToggleView, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel_LLayout.setVerticalGroup(
@@ -296,9 +293,9 @@ public class reportForm extends javax.swing.JFrame {
                 .addComponent(jToggleView, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jToggleClientlist, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
-                .addComponent(jToggleSetting, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(426, Short.MAX_VALUE))
+                .addGap(100, 100, 100)
+                .addComponent(btn_setting, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(369, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(jPanel_L);
@@ -701,7 +698,7 @@ public class reportForm extends javax.swing.JFrame {
 
             DefaultPieDataset pieDataset = new DefaultPieDataset();
             pieDataset.setValue("All user", c);
-            pieDataset.setValue("Current user", c - c_cuurent);
+            pieDataset.setValue("Current user",c_cuurent);
 
             JFreeChart chart = ChartFactory.createPieChart3D("User ratio", pieDataset, true, true, true);
             ChartPanel chartP = new ChartPanel(chart);
@@ -744,10 +741,18 @@ public class reportForm extends javax.swing.JFrame {
         p.setVisible(false);
         
         if(jToggleClientlist.isSelected()){
-            
+            System.out.println(this.sqlClient);
             selectClientlist(this.sqlClient);
         }
     }//GEN-LAST:event_jToggleClientlistActionPerformed
+
+    private void btn_settingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_settingActionPerformed
+
+        settingFrame sttingFrame = new settingFrame(); 
+        Image icon_Image = Toolkit.getDefaultToolkit().getImage("green-energy-icon-md.png");
+        
+        sttingFrame.setVisible(true);
+    }//GEN-LAST:event_btn_settingActionPerformed
 
     /**
      * @param args the command line arguments
@@ -784,6 +789,7 @@ public class reportForm extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_setting;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel_load_table;
     private javax.swing.JLabel jLabel_loding_graph;
@@ -801,7 +807,6 @@ public class reportForm extends javax.swing.JFrame {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JToggleButton jToggleClientlist;
-    private javax.swing.JToggleButton jToggleSetting;
     public static javax.swing.JToggleButton jToggleView;
     // End of variables declaration//GEN-END:variables
 }
