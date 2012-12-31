@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.swing.GroupLayout;
@@ -31,9 +32,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartFrame;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.util.Rotation;
 
@@ -86,7 +93,7 @@ public class reportForm extends javax.swing.JFrame {
                 txt_sql += "from client_info where time  between '"+ str_date1 +" 00:00:00'";
                 txt_sql += " and '"+ str_date2 +" 23:59:59' group by MAC";
                 reportForm.this.sql = txt_sql;
-                selectView(reportForm.this.sql);               
+                reportForm.this.selectView(reportForm.this.sql);               
                 //System.out.println(reportForm.this.sql);
                 Calendar calendar = Calendar.getInstance();
                 reportForm.this.sqlClient = "select name , detail from client_info where time between '"+sdf.format(calendar.getTime()) +" 00:00:00'";
@@ -190,7 +197,7 @@ public class reportForm extends javax.swing.JFrame {
         this.sql = "select name , detail , sum(lost_min) as lost_min , watt from client_info group by MAC";
         this.sqlClient = "select name , detail from client_info";
         
-        this.mdb.setMysqlPrivileges();
+        //this.mdb.setMysqlPrivileges();
         //jToggleView.setSelected(true);
         //jToggleViewActionPerformed(null);
 
@@ -199,7 +206,8 @@ public class reportForm extends javax.swing.JFrame {
         jTable1.setEnabled(false);
         p.setVisible(false);
         
-        selectView(this.sql);       
+        //this.selectView(sql);
+
     }
 
     /**
@@ -510,11 +518,23 @@ public class reportForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectView(String str_sql){
+
+        if (this.jPanel_graph.getComponentCount() > 1) {
+            this.jPanel_graph.remove(1);
+        }
         
-            jLabel_loding_graph.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
-            jLabel_loding_graph.setText("");
-            jLabel_load_table.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
-            jLabel_load_table.setText("");
+        jLabel_loding_graph.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
+        jLabel_loding_graph.setText("");
+        jLabel_load_table.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
+        jLabel_load_table.setText("");
+
+        jPanel_loading_table.setVisible(true);
+        jScrollPane1.setVisible(false);
+        jPanel_loading_graph.setVisible(true);
+        jPanel1.setVisible(false);
+        jPanel1.setVisible(true);
+        
+
             
             String[] Columname = {"No", "Name", "Detail", "losttime (min)", "Unit"};
             DefaultTableModel model = new DefaultTableModel(Columname, 0);
@@ -555,11 +575,72 @@ public class reportForm extends javax.swing.JFrame {
                 jLabel_load_table.setText("                         No Data");
                 jPanel_loading_table.setVisible(true);
                 
+                jLabel_loding_graph.setIcon(null);
+                jLabel_loding_graph.setText("                         No Data");
+                jLabel_loding_graph.setVisible(true);
+                
+            }else{
+            
+                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+                String rowString = "waste time (Minute)";
+                String colString = "Time";
+                String strAM = "AM";
+                String strPM = "PM";
+        
+                dataset.setValue(80, rowString, "6 "+strAM);
+                dataset.setValue(75, rowString, "7 "+strAM);
+                dataset.setValue(30, rowString, "8 "+strAM);
+                dataset.setValue(90, rowString, "9 "+strAM);
+                dataset.setValue(60, rowString, "10 "+strAM);
+                dataset.setValue(55, rowString, "11 "+strAM);
+                dataset.setValue(80, rowString, "12 "+strAM);
+                dataset.setValue(75, rowString, "1 "+strAM);
+                dataset.setValue(30, rowString, "2 "+strAM);
+                dataset.setValue(90, rowString, "3 "+strAM);
+                dataset.setValue(60, rowString, "4 "+strAM);
+                dataset.setValue(55, rowString, "5 "+strAM);
+
+                dataset.setValue(80, rowString, "6 "+strPM);
+                dataset.setValue(75, rowString, "7 "+strPM);
+                dataset.setValue(30, rowString, "8 "+strPM);
+                dataset.setValue(90, rowString, "9 "+strPM);
+                dataset.setValue(60, rowString, "10 "+strPM);
+                dataset.setValue(55, rowString, "11 "+strPM);
+                dataset.setValue(80, rowString, "12 "+strPM);
+                dataset.setValue(75, rowString, "1 "+strPM);
+                dataset.setValue(30, rowString, "2 "+strPM);
+                dataset.setValue(90, rowString, "3 "+strPM);
+                dataset.setValue(60, rowString, "4 "+strPM);
+                dataset.setValue(55, rowString, "5 "+strPM);
+
+                JFreeChart chart = ChartFactory.createBarChart3D("waste time Chart", "duration", rowString, dataset, PlotOrientation.VERTICAL, false, true, false);
+                CategoryPlot p = chart.getCategoryPlot();
+
+                BarRenderer renderer = (BarRenderer) p.getRenderer();
+                DecimalFormat decimalformat = new DecimalFormat("##.##");
+                renderer.setItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", decimalformat));
+                p.setRenderer(renderer);
+
+                renderer.setItemLabelsVisible(true);
+                p.setRangeGridlinePaint(Color.BLACK);
+                ChartPanel barchartP = new ChartPanel(chart);
+                barchartP.setSize(this.jPanel_graph.getSize());
+                this.jPanel_graph.add(barchartP, -1);
+                barchartP.setVisible(true);
+                
+                jPanel_loading_table.setVisible(false);
+                jPanel_loading_graph.setVisible(false);
+                jScrollPane1.setVisible(true);
+                
+                
             }
     }
     
     private void selectClientlist(String str_sql){
     
+        if (this.jPanel_graph.getComponentCount() > 1) {
+            this.jPanel_graph.remove(1);
+        }
         jLabel_loding_graph.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
         jPanel_loading_table.setVisible(true);
         jScrollPane1.setVisible(false);
@@ -634,7 +715,7 @@ public class reportForm extends javax.swing.JFrame {
 //            final Rotator rotator = new Rotator(plot);
 //            rotator.start();
             
-            chartP.setSize(jPanel_graph.getSize());
+            chartP.setSize(this.jPanel_graph.getSize());
             this.jPanel_graph.add(chartP, -1);
             chartP.setVisible(true);
 
@@ -645,28 +726,14 @@ public class reportForm extends javax.swing.JFrame {
     }
     
     private void jToggleViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleViewActionPerformed
-        //p.setVisible(false);
-        //jPanel_table.setEnabled(false);
-        //jPanel_loading_table.setVisible(true);
-                
-        if (jToggleView.isSelected()) {
-            
-            if(this.jPanel_graph.getComponentCount()>1){
-                        this.jPanel_graph.remove(1);
-            }
 
-            jLabel_loding_graph.setIcon(new javax.swing.ImageIcon(getClass().getResource("/energymonitor_sever/loading15.gif")));
-            jPanel_loading_table.setVisible(true);
-            jScrollPane1.setVisible(false);
-            jPanel_loading_graph.setVisible(true);
-            jPanel1.setVisible(false);
-            jPanel1.setVisible(true);
+        if (jToggleView.isSelected()) {
             
             p.setVisible(true);
             
         }else{
             p.setVisible(false);
-             //np.setVisible(false);
+
         }
         
     }//GEN-LAST:event_jToggleViewActionPerformed
@@ -712,7 +779,7 @@ public class reportForm extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new reportForm().setVisible(true);
+                new reportForm().setVisible(true);               
             }
         });
     }

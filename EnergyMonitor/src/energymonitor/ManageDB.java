@@ -113,7 +113,7 @@ public class ManageDB {
    }
    */
    public void insertData(String sql){
-
+System.out.println(sql);
        try{
            this.stmt = this.conn.createStatement();
            this.sql = sql;

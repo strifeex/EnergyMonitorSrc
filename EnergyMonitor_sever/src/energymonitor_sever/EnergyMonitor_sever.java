@@ -20,5 +20,6 @@ public class EnergyMonitor_sever {
         setNimbusUI();
         reportForm rp_form = new reportForm();
         rp_form.setVisible(true);
+        
     }
 }
