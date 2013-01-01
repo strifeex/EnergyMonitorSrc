@@ -4,7 +4,6 @@
  */
 package energymonitor_sever;
 
-import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -19,11 +18,14 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -53,6 +55,7 @@ public class reportForm extends javax.swing.JFrame {
     ManageDB mdb = new ManageDB();
     static String sql = "";
     static String sqlClient = "";
+    static String sqlBargraph = "";
 
     Object[] data = new Object[0];
     Calendar cal = Calendar.getInstance();
@@ -93,13 +96,21 @@ public class reportForm extends javax.swing.JFrame {
                 txt_sql += "from client_info where time  between '"+ str_date1 +" 00:00:00'";
                 txt_sql += " and '"+ str_date2 +" 23:59:59' group by MAC";
                 reportForm.this.sql = txt_sql;
-                reportForm.this.selectView(reportForm.this.sql);               
-                //System.out.println(reportForm.this.sql);
-                Calendar calendar = Calendar.getInstance();
+                              
+
                 reportForm.this.sqlClient = "select name , detail from client_info where time between '"+str_date1 +" 00:00:00'";
                 reportForm.this.sqlClient += " and '"+ str_date2 +" 23:59:59' group by MAC";
-
-                System.out.println(sqlClient);
+                
+                reportForm.this.sqlBargraph = "select start_time , lost_min , DATE_FORMAT(start_time,'%H') as hr "
+                        + ", DATE_FORMAT(start_time,'%i') as min "
+                        + "from client_info where time between '"+str_date1 +" 00:00:00'"
+                        +" and '"+ str_date2 +" 23:59:59'"+" ";
+ 
+                
+                lbl_date.setText(reportForm.this.getfomatDate(cld.getDate(), cld2.getDate()));
+                
+                reportForm.this.selectView(reportForm.this.sql);
+                System.out.println(sqlBargraph);
                 p.setVisible(false);
                 jToggleView.setSelected(true);
                 
@@ -175,6 +186,11 @@ public class reportForm extends javax.swing.JFrame {
         Image icon_Image = Toolkit.getDefaultToolkit().getImage("green-energy-icon-md.png");
         this.setIconImage(icon_Image);
         
+        //disable downPanel
+        this.jPanel_Dn_1.setVisible(false);
+        this.jPanel_Dn_2.setVisible(false);
+        this.lbl_date.setVisible(false);
+        this.lbl_title_User.setVisible(false);
         
         if (mdb.ConnDB("localhost")) {
             System.out.println("connnect");        
@@ -191,11 +207,16 @@ public class reportForm extends javax.swing.JFrame {
         
         this.sql = "select name , detail , sum(lost_min) as lost_min , watt from client_info group by MAC";
         this.sqlClient = "select name , detail from client_info group by MAC";
+        this.sqlBargraph = "select start_time , lost_min , DATE_FORMAT(start_time,'%H') as hr , DATE_FORMAT(start_time,'%i') as min from client_info";
         
         //this.mdb.setMysqlPrivileges();
         //jToggleView.setSelected(true);
         //jToggleViewActionPerformed(null);
 
+        String DATE_FORMAT_NOW = "dd  MMMM yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+        
+        lbl_date.setText(sdf.format(cal.getTime()));
         this.createFilterPanel();
         
         jTable1.setEnabled(false);
@@ -223,6 +244,25 @@ public class reportForm extends javax.swing.JFrame {
         btn_setting = new javax.swing.JButton();
         jPanelR = new javax.swing.JPanel();
         jPanelR_Down = new javax.swing.JPanel();
+        jPanel_Dn_1 = new javax.swing.JPanel();
+        lbl_cost = new javax.swing.JLabel();
+        txt_cost_bath = new javax.swing.JLabel();
+        txt_Sum_unit = new javax.swing.JTextField();
+        lbl_unit_unit = new javax.swing.JLabel();
+        lbl_losttime_unit = new javax.swing.JLabel();
+        txt_Sum_lostTime = new javax.swing.JTextField();
+        txt_cost = new javax.swing.JTextField();
+        lbl_Sum_unit = new javax.swing.JLabel();
+        lbl_sum_lostTime = new javax.swing.JLabel();
+        lbl_date = new javax.swing.JLabel();
+        jPanel_Dn_2 = new javax.swing.JPanel();
+        lbl_curr_user_unit = new javax.swing.JLabel();
+        lbl_amount_user_unit = new javax.swing.JLabel();
+        lbl_curr_user = new javax.swing.JLabel();
+        txt_amount_user = new javax.swing.JTextField();
+        txt_curr_user = new javax.swing.JTextField();
+        lbl_amount_user = new javax.swing.JLabel();
+        lbl_title_User = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel_graph = new javax.swing.JPanel();
@@ -247,6 +287,7 @@ public class reportForm extends javax.swing.JFrame {
         jPanel_L.setFocusCycleRoot(true);
         jPanel_L.setPreferredSize(new java.awt.Dimension(100, 1172));
 
+        jToggleView.setBackground(new java.awt.Color(0, 204, 204));
         buttonGroup1.add(jToggleView);
         jToggleView.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
         jToggleView.setText("View");
@@ -256,6 +297,7 @@ public class reportForm extends javax.swing.JFrame {
             }
         });
 
+        jToggleClientlist.setBackground(new java.awt.Color(0, 204, 204));
         buttonGroup1.add(jToggleClientlist);
         jToggleClientlist.setFont(new java.awt.Font("Trajan Pro", 1, 12)); // NOI18N
         jToggleClientlist.setText("ClientList");
@@ -304,15 +346,188 @@ public class reportForm extends javax.swing.JFrame {
 
         jPanelR_Down.setBackground(new java.awt.Color(0, 153, 153));
 
+        jPanel_Dn_1.setBackground(new java.awt.Color(0, 102, 102));
+        jPanel_Dn_1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED, null, new java.awt.Color(0, 153, 153), null, null));
+
+        lbl_cost.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_cost.setText("คิดเป็นมูลค่า        :");
+
+        txt_cost_bath.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_cost_bath.setText("THB");
+
+        txt_Sum_unit.setEditable(false);
+        txt_Sum_unit.setBackground(new java.awt.Color(153, 255, 153));
+        txt_Sum_unit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_Sum_unit.setText("jTextField1");
+
+        lbl_unit_unit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_unit_unit.setText("Unit");
+
+        lbl_losttime_unit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_losttime_unit.setText("Minute");
+
+        txt_Sum_lostTime.setEditable(false);
+        txt_Sum_lostTime.setBackground(new java.awt.Color(153, 255, 153));
+        txt_Sum_lostTime.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_Sum_lostTime.setText("jTextField1");
+
+        txt_cost.setEditable(false);
+        txt_cost.setBackground(new java.awt.Color(153, 255, 153));
+        txt_cost.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_cost.setText("jTextField1");
+
+        lbl_Sum_unit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_Sum_unit.setText("จำนวนหน่วย        :");
+
+        lbl_sum_lostTime.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_sum_lostTime.setText("เวลาที่สิ้นเปลือง    : ");
+
+        javax.swing.GroupLayout jPanel_Dn_1Layout = new javax.swing.GroupLayout(jPanel_Dn_1);
+        jPanel_Dn_1.setLayout(jPanel_Dn_1Layout);
+        jPanel_Dn_1Layout.setHorizontalGroup(
+            jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_Dn_1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lbl_cost, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_Sum_unit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbl_sum_lostTime))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(txt_Sum_lostTime)
+                        .addComponent(txt_Sum_unit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_cost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_cost_bath)
+                    .addGroup(jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lbl_unit_unit, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lbl_losttime_unit, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel_Dn_1Layout.setVerticalGroup(
+            jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_Dn_1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_sum_lostTime, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_Sum_lostTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_losttime_unit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_Sum_unit, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_Sum_unit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_unit_unit))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel_Dn_1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_cost)
+                    .addComponent(txt_cost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_cost_bath))
+                .addContainerGap())
+        );
+
+        lbl_date.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_date.setForeground(new java.awt.Color(102, 0, 102));
+        lbl_date.setText("lbl_date");
+
+        jPanel_Dn_2.setBackground(new java.awt.Color(0, 120, 120));
+        jPanel_Dn_2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        lbl_curr_user_unit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_curr_user_unit.setText("เครื่อง");
+
+        lbl_amount_user_unit.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_amount_user_unit.setText("เครื่อง");
+
+        lbl_curr_user.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_curr_user.setText("ณ ช่วงเวลา  : ");
+
+        txt_amount_user.setEditable(false);
+        txt_amount_user.setBackground(new java.awt.Color(153, 255, 153));
+        txt_amount_user.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_amount_user.setText("jTextField1");
+
+        txt_curr_user.setEditable(false);
+        txt_curr_user.setBackground(new java.awt.Color(153, 255, 153));
+        txt_curr_user.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txt_curr_user.setText("jTextField1");
+
+        lbl_amount_user.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_amount_user.setText("ทั้งหมด       : ");
+
+        javax.swing.GroupLayout jPanel_Dn_2Layout = new javax.swing.GroupLayout(jPanel_Dn_2);
+        jPanel_Dn_2.setLayout(jPanel_Dn_2Layout);
+        jPanel_Dn_2Layout.setHorizontalGroup(
+            jPanel_Dn_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_Dn_2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_Dn_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel_Dn_2Layout.createSequentialGroup()
+                        .addComponent(lbl_amount_user)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txt_amount_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbl_amount_user_unit, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel_Dn_2Layout.createSequentialGroup()
+                        .addComponent(lbl_curr_user)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txt_curr_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lbl_curr_user_unit, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        jPanel_Dn_2Layout.setVerticalGroup(
+            jPanel_Dn_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel_Dn_2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel_Dn_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_amount_user)
+                    .addComponent(txt_amount_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_amount_user_unit))
+                .addGap(12, 12, 12)
+                .addGroup(jPanel_Dn_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_curr_user)
+                    .addComponent(txt_curr_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_curr_user_unit))
+                .addContainerGap())
+        );
+
+        lbl_title_User.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        lbl_title_User.setText("จำนวนเครื่อง");
+
         javax.swing.GroupLayout jPanelR_DownLayout = new javax.swing.GroupLayout(jPanelR_Down);
         jPanelR_Down.setLayout(jPanelR_DownLayout);
         jPanelR_DownLayout.setHorizontalGroup(
             jPanelR_DownLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanelR_DownLayout.createSequentialGroup()
+                .addGroup(jPanelR_DownLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelR_DownLayout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addComponent(lbl_date))
+                    .addGroup(jPanelR_DownLayout.createSequentialGroup()
+                        .addGap(105, 105, 105)
+                        .addComponent(jPanel_Dn_1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanelR_DownLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel_Dn_2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_title_User, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(91, 91, 91))
         );
         jPanelR_DownLayout.setVerticalGroup(
             jPanelR_DownLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 239, Short.MAX_VALUE)
+            .addGroup(jPanelR_DownLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(lbl_date)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel_Dn_1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(38, Short.MAX_VALUE))
+            .addGroup(jPanelR_DownLayout.createSequentialGroup()
+                .addGap(45, 45, 45)
+                .addComponent(lbl_title_User, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel_Dn_2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         jTabbedPane1.setBackground(new java.awt.Color(51, 51, 51));
@@ -514,8 +729,19 @@ public class reportForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    public String getfomatDate(Date date1, Date date2){
+    
+        String DATE_FORMAT_NOW = "dd  MMMM yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+        
+        return "From "+sdf.format(date1)+"   to   "+sdf.format(date2);
+    }
+    
     private void selectView(String str_sql){
 
+        lbl_date.setVisible(true);
+        
         if (this.jPanel_graph.getComponentCount() > 1) {
             this.jPanel_graph.remove(1);
         }
@@ -539,10 +765,13 @@ public class reportForm extends javax.swing.JFrame {
             
             ResultSet rs = mdb.getSelectdata(str_sql);
             
+            double total_unit = 0; 
+            int sum_minute = 0;
             int c = 0;
             try {                 
                
                 while (rs.next()) {
+                    sum_minute += Integer.parseInt(rs.getString("lost_min"));
                     double hr = Double.parseDouble(rs.getString("lost_min")) / 60;
                     double watt = Double.parseDouble(rs.getString("watt"));
                     double unit = watt / 1000 * hr;
@@ -553,6 +782,7 @@ public class reportForm extends javax.swing.JFrame {
                     jTable1.setValueAt(rs.getString("lost_min"), c, 3);
                     jTable1.setValueAt(unit + "", c, 4);
                     c++;
+                    total_unit += unit;
                     //System.out.println(unit+"  : unit \n"+watt+" : watt  \n"+hr+" : hr");
                 }
 
@@ -561,6 +791,24 @@ public class reportForm extends javax.swing.JFrame {
                 ex.printStackTrace();
             }
             
+            
+            
+        str_sql = "select cost_per_unit from sever_info where Id = 1";
+        rs = mdb.getSelectdata(str_sql);
+        double cost_unit = 0;
+        try{
+            rs.next();           
+            cost_unit = Double.parseDouble(rs.getString("cost_per_unit"));
+        }catch(Exception ex){
+        
+        }
+            
+        double total_cost = total_unit*cost_unit;
+        
+        txt_Sum_unit.setText(total_unit+"");
+        txt_Sum_lostTime.setText(sum_minute+"");
+        txt_cost.setText(total_cost+"");
+        
             jPanel_loading_table.setVisible(false);
             jScrollPane1.setVisible(true);
             //jPanel_table.setVisible(true);
@@ -576,39 +824,60 @@ public class reportForm extends javax.swing.JFrame {
                 jLabel_loding_graph.setText("                         No Data");
                 jLabel_loding_graph.setVisible(true);
                 
+                jPanel_Dn_1.setVisible(false);
+                
             }else{
             
+                
+                rs = mdb.getSelectdata(this.sqlBargraph);
+                int barValue[] = new int[24] ;
+                for(int i = 0 ; i<barValue.length ; i++){
+                
+                    barValue[i] = 0;
+                }
+                
+                try {
+
+                    while (rs.next()) {
+                        int lost_min = Integer.parseInt(rs.getString("lost_min"));
+                        int hr = Integer.parseInt(rs.getString("hr"));
+                        int min = Integer.parseInt(rs.getString("min"));
+                        
+                        barValue[hr] += lost_min;
+                        
+//                        if(lost_min > min){
+//                            while (lost_min != 0) {
+//
+//                                barValue[hr] += lost_min;
+//
+//                                lost_min = lost_min - min;
+//                                hr = hr-1;
+//                            }
+//                        }else{
+//                        
+//                            barValue[hr] += lost_min;
+//                        }
+//
+//
+                    }
+
+                } catch (SQLException ex) {
+                    JOptionPane.showConfirmDialog((Component) null, "Error", "Alert", JOptionPane.DEFAULT_OPTION);
+                    ex.printStackTrace();
+                }
+                
+                
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
                 String rowString = "waste time (Minute)";
                 String colString = "Time";
-                String strAM = "AM";
-                String strPM = "PM";
+                String strAM = "";
+                String strPM = "";
         
-                dataset.setValue(80, rowString, "6 "+strAM);
-                dataset.setValue(75, rowString, "7 "+strAM);
-                dataset.setValue(30, rowString, "8 "+strAM);
-                dataset.setValue(90, rowString, "9 "+strAM);
-                dataset.setValue(60, rowString, "10 "+strAM);
-                dataset.setValue(55, rowString, "11 "+strAM);
-                dataset.setValue(80, rowString, "12 "+strAM);
-                dataset.setValue(75, rowString, "1 "+strAM);
-                dataset.setValue(30, rowString, "2 "+strAM);
-                dataset.setValue(90, rowString, "3 "+strAM);
-                dataset.setValue(60, rowString, "4 "+strAM);
-                dataset.setValue(55, rowString, "5 "+strAM);
+                for(int i=1 ; i<=23 ; i++){
+                    dataset.setValue(barValue[i], rowString, i+" ");
+                }
+                dataset.setValue(barValue[0], rowString, "24 ");
 
-                dataset.setValue(80, rowString, "6 "+strPM);
-                dataset.setValue(75, rowString, "7 "+strPM);
-                dataset.setValue(30, rowString, "8 "+strPM);
-                dataset.setValue(90, rowString, "9 "+strPM);
-                dataset.setValue(60, rowString, "10 "+strPM);
-                dataset.setValue(55, rowString, "11 "+strPM);
-                dataset.setValue(80, rowString, "12 "+strPM);
-                dataset.setValue(75, rowString, "1 "+strPM);
-                dataset.setValue(30, rowString, "2 "+strPM);
-                dataset.setValue(90, rowString, "3 "+strPM);
-                dataset.setValue(60, rowString, "4 "+strPM);
-                dataset.setValue(55, rowString, "5 "+strPM);
 
                 JFreeChart chart = ChartFactory.createBarChart3D("waste time Chart", "duration", rowString, dataset, PlotOrientation.VERTICAL, false, true, false);
                 CategoryPlot p = chart.getCategoryPlot();
@@ -623,18 +892,51 @@ public class reportForm extends javax.swing.JFrame {
                 ChartPanel barchartP = new ChartPanel(chart);
                 barchartP.setSize(this.jPanel_graph.getSize());
                 this.jPanel_graph.add(barchartP, -1);
+    
+                barchartP.addMouseListener(new MouseListener() {
+
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        //reportForm.this.p.setVisible(false);
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        reportForm.this.p.setVisible(false);
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        //throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                       // throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        //throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                });
+                
                 barchartP.setVisible(true);
                 
                 jPanel_loading_table.setVisible(false);
                 jPanel_loading_graph.setVisible(false);
                 jScrollPane1.setVisible(true);
                 
+                jPanel_Dn_1.setVisible(true);
                 
             }
     }
     
     private void selectClientlist(String str_sql){
     
+        
+        lbl_date.setVisible(true);
+        
         if (this.jPanel_graph.getComponentCount() > 1) {
             this.jPanel_graph.remove(1);
         }
@@ -683,6 +985,8 @@ public class reportForm extends javax.swing.JFrame {
 
         //jPanel_table.setVisible(true);
 
+        txt_amount_user.setText(c+"");
+        txt_curr_user.setText(c_cuurent+"");
         if (c <= 0) {
             //jPanel_table.setVisible(false);
             jScrollPane1.setVisible(false);
@@ -694,6 +998,9 @@ public class reportForm extends javax.swing.JFrame {
             jLabel_loding_graph.setText("                         No Data");
             jLabel_loding_graph.setVisible(true);
 
+            jPanel_Dn_2.setVisible(false);
+            lbl_title_User.setVisible(false);
+            
         } else {
 
             DefaultPieDataset pieDataset = new DefaultPieDataset();
@@ -704,7 +1011,7 @@ public class reportForm extends javax.swing.JFrame {
             ChartPanel chartP = new ChartPanel(chart);
             PiePlot3D plot = (PiePlot3D) chart.getPlot();  
             plot.setForegroundAlpha(0.60f);
-            //p.setDirection(Rotation.CLOCKWISE);
+            plot.setDirection(Rotation.ANTICLOCKWISE);
             plot.setSectionPaint("All user", Color.green);
             plot.setSectionPaint("Current user", Color.red);
             
@@ -714,11 +1021,43 @@ public class reportForm extends javax.swing.JFrame {
             
             chartP.setSize(this.jPanel_graph.getSize());
             this.jPanel_graph.add(chartP, -1);
+            
+             chartP.addMouseListener(new MouseListener() {
+
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        //reportForm.this.p.setVisible(false);
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        reportForm.this.p.setVisible(false);
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        //throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                       // throw new UnsupportedOperationException("Not supported yet.");
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        //throw new UnsupportedOperationException("Not supported yet.");
+                    }
+                });
+             
             chartP.setVisible(true);
 
             jPanel_loading_table.setVisible(false);
             jPanel_loading_graph.setVisible(false);
             jScrollPane1.setVisible(true);
+            
+            jPanel_Dn_2.setVisible(true);
+            lbl_title_User.setVisible(true);
         }
     }
     
@@ -741,7 +1080,7 @@ public class reportForm extends javax.swing.JFrame {
         p.setVisible(false);
         
         if(jToggleClientlist.isSelected()){
-            System.out.println(this.sqlClient);
+
             selectClientlist(this.sqlClient);
         }
     }//GEN-LAST:event_jToggleClientlistActionPerformed
@@ -797,6 +1136,8 @@ public class reportForm extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelR;
     private javax.swing.JPanel jPanelR_Down;
+    private javax.swing.JPanel jPanel_Dn_1;
+    private javax.swing.JPanel jPanel_Dn_2;
     private javax.swing.JPanel jPanel_L;
     private javax.swing.JPanel jPanel_graph;
     private javax.swing.JPanel jPanel_loading_graph;
@@ -808,5 +1149,22 @@ public class reportForm extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JToggleButton jToggleClientlist;
     public static javax.swing.JToggleButton jToggleView;
+    private javax.swing.JLabel lbl_Sum_unit;
+    private javax.swing.JLabel lbl_amount_user;
+    private javax.swing.JLabel lbl_amount_user_unit;
+    private javax.swing.JLabel lbl_cost;
+    private javax.swing.JLabel lbl_curr_user;
+    private javax.swing.JLabel lbl_curr_user_unit;
+    private javax.swing.JLabel lbl_date;
+    private javax.swing.JLabel lbl_losttime_unit;
+    private javax.swing.JLabel lbl_sum_lostTime;
+    private javax.swing.JLabel lbl_title_User;
+    private javax.swing.JLabel lbl_unit_unit;
+    private javax.swing.JTextField txt_Sum_lostTime;
+    private javax.swing.JTextField txt_Sum_unit;
+    private javax.swing.JTextField txt_amount_user;
+    private javax.swing.JTextField txt_cost;
+    private javax.swing.JLabel txt_cost_bath;
+    private javax.swing.JTextField txt_curr_user;
     // End of variables declaration//GEN-END:variables
 }

@@ -4,7 +4,6 @@
  */
 package energymonitor_sever;
 
-import com.sun.java.swing.plaf.windows.resources.windows_de;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -224,7 +223,7 @@ public class settingFrame extends javax.swing.JFrame {
 
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
 
-        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_btn_cancelActionPerformed
 
     
