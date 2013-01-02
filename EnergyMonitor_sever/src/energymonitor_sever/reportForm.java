@@ -198,6 +198,7 @@ public class reportForm extends javax.swing.JFrame {
                 System.out.println("Databse coorect");
             } else {
                 mdb.CreatDB();
+                mdb.Createtable("localhost", "EnergyMonitor");
                 mdb.setMysqlPrivileges();
                 System.out.println("no Database");
             }
