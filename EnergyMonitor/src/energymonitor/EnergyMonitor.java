@@ -52,6 +52,35 @@ public class EnergyMonitor {
         }
     }
     
+    public static void runAtStartup(){
+        
+        Process proc; 
+        String appname = "EnergyMonitorStartup";
+        String absol_path = System.getProperty("user.dir");
+        String regeditCommand = "REG ADD HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v "+appname+" /d \""+absol_path+"\\EnergyMonitor.jar\""; 
+        
+        try {
+            proc = Runtime.getRuntime().exec(regeditCommand);  
+        } catch (Exception e) {
+        }
+
+    }
+    
+    public static void delrunAtStartup() {
+
+        Process proc;
+        String appname = "EnergyMonitorStartup";
+        String regeditCommand = "REG DELETE HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v " + appname +" /f";
+
+        try {
+            proc = Runtime.getRuntime().exec(regeditCommand);
+        } catch (Exception e) {
+        }
+
+    }
+    
+    
+    
     public static void main(String[] args) {
 //        ManageDB tb = new ManageDB();
 //        if(tb.ConnDB("192.168.2.4")){
@@ -62,7 +91,8 @@ public class EnergyMonitor {
 //        System.out.println();
 //        System.exit(0);
         setNimbusUI();
-         
+        runAtStartup();
+        
         Runnable runner;
         runner = new Runnable() {
             @Override
