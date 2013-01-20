@@ -21,6 +21,8 @@ public class GetInfo {
     static String server_ip = "Please input ServerIP";
     static String name_txt = "";
     static String detail_txt = "";
+    static String watt_type = "";
+    static String watt = "";
     static String filesave_name = "ipconnect.in";
     
     static String loadSeverIP(){
@@ -29,6 +31,8 @@ public class GetInfo {
             GetInfo.server_ip = sc.nextLine();
             GetInfo.name_txt = sc.nextLine();
             GetInfo.detail_txt = sc.nextLine();
+            GetInfo.watt_type = sc.nextLine();
+            GetInfo.watt = sc.nextLine();
         }
         catch(Exception ex){
             //JOptionPane.showConfirmDialog((Component) null, "loadSeverIP = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);
@@ -38,13 +42,15 @@ public class GetInfo {
         return GetInfo.server_ip;
     }
     
-    static void saveServerIP(String iptext,String name ,String details){
+    static void saveServerIP(String iptext,String name ,String details,String watttype,String watt){
         try{
             FileWriter fw = new FileWriter(filesave_name);
             BufferedWriter out = new BufferedWriter(fw);
             out.write(iptext);
             out.write("\n"+name);
             out.write("\n"+details);
+            out.write("\n"+watttype);
+            out.write("\n"+watt);
             out.close(); 
         }
         catch(Exception ex){

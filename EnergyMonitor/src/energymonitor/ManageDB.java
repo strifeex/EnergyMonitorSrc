@@ -113,7 +113,7 @@ public class ManageDB {
    }
    */
    public void insertData(String sql){
-System.out.println(sql);
+
        try{
            this.stmt = this.conn.createStatement();
            this.sql = sql;
@@ -165,10 +165,10 @@ System.out.println(sql);
         }
     }
    
-   public int getCurrentid(String mac_address){
+   public int getCurrentid(String mac_address , String table){
 
        try {
-           this.sql = "select MAX(id) from client_info where MAC = '"+mac_address+"'";
+           this.sql = "select MAX(id) from "+table+" where MAC = '"+mac_address+"'";
            ResultSet rs = this.stmt.executeQuery(sql);
            rs.next();
            return Integer.parseInt(rs.getString(1));
@@ -177,6 +177,7 @@ System.out.println(sql);
            return 0;
        }
    }
+   
    public void closeDB(){
        if(this.conn != null){
            try {

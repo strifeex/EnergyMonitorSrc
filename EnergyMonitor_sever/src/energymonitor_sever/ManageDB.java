@@ -86,7 +86,7 @@ public class ManageDB {
            this.stmt = this.conn.createStatement();
            this.sql = "CREATE TABLE client_info "
                    + "( "
-                   + "Id int , "
+                   + "Id int NOT NULL AUTO_INCREMENT, "
                    + "MAC varchar(50) , "
                    + "name varchar(255) , "
                    + "detail varchar(255) , "
@@ -102,11 +102,23 @@ public class ManageDB {
            
            this.sql = "CREATE TABLE sever_info "
                    + "( "
-                   + "Id int , "
+                   + "Id int NOT NULL AUTO_INCREMENT, "
                    + "MAC varchar(50) , "
                    + "delay int , "
                    + "cost_per_unit float , "
                    + "time TIMESTAMP , "
+                   + "PRIMARY KEY (Id) "
+                   + ") ";
+           this.stmt.executeUpdate(this.sql);
+           
+           this.sql = "CREATE TABLE client_online "
+                   + "( "
+                   + "Id int , "
+                   + "MAC varchar(50) , "
+                   + "name varchar(255) , "
+                   + "time TIMESTAMP , "
+                   + "online_min int , "
+                   + "start_time TIMESTAMP , "
                    + "PRIMARY KEY (Id) "
                    + ") ";
            this.stmt.executeUpdate(this.sql);
@@ -153,6 +165,7 @@ public class ManageDB {
            this.stmt = this.conn.createStatement();
            this.sql = sql;
            this.stmt.executeUpdate(this.sql);
+           System.out.println(sql);
        }
        catch(Exception ex){
            JOptionPane.showConfirmDialog((Component) null, "updateData  = "+ex.toString(), "alert", JOptionPane.DEFAULT_OPTION);

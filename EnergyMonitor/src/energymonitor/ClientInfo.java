@@ -31,6 +31,20 @@ public class ClientInfo extends javax.swing.JFrame {
         String tmp_name = GetInfo.name_txt.equals("") ? GetInfo.getClientName() : GetInfo.name_txt;
         txt_name.setText(tmp_name);
         txt_detail.setText(GetInfo.detail_txt);
+        String tmp_watttype = GetInfo.watt_type.equals("") ?  "0" : GetInfo.watt_type;
+        CB_type.setSelectedIndex(Integer.parseInt(tmp_watttype));
+        if(!GetInfo.watt.equals("")){
+            if(Double.parseDouble(GetInfo.watt) > 0){
+
+                String[] wattvalue = (GetInfo.watt).split("\\.");
+                spin_watt.setEnabled(true);
+                spin_watt2.setEnabled(true);
+                spin_watt.setValue(Integer.parseInt(wattvalue[0]));
+                spin_watt2.setValue(Integer.parseInt(wattvalue[1]));
+                chk_specwatt.setSelected(true);
+                
+            }
+        }
         Image icon_Image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/img/green-energy_logo.png"));
         this.setIconImage(icon_Image);
               
@@ -56,8 +70,15 @@ public class ClientInfo extends javax.swing.JFrame {
         lbl_IPconn = new javax.swing.JLabel();
         btn_testIP = new javax.swing.JButton();
         btn_ok = new javax.swing.JButton();
+        lbl_type = new javax.swing.JLabel();
+        CB_type = new javax.swing.JComboBox();
+        spin_watt = new javax.swing.JSpinner();
+        chk_specwatt = new javax.swing.JCheckBox();
+        spin_watt2 = new javax.swing.JSpinner();
+        lbl_dot = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 153, 51));
+        setResizable(false);
 
         lbl_sv.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lbl_sv.setText("Server IP         :");
@@ -100,36 +121,70 @@ public class ClientInfo extends javax.swing.JFrame {
             }
         });
 
+        lbl_type.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lbl_type.setText("Type of client    :");
+
+        CB_type.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Desktop (PC)", "Laptop (notebook)", " " }));
+
+        spin_watt.setModel(new javax.swing.SpinnerNumberModel(0, 0, 9999, 1));
+        spin_watt.setEnabled(false);
+
+        chk_specwatt.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        chk_specwatt.setText("specify watt      :");
+        chk_specwatt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chk_specwattActionPerformed(evt);
+            }
+        });
+
+        spin_watt2.setModel(new javax.swing.SpinnerNumberModel(0, 0, 99, 1));
+        spin_watt2.setEnabled(false);
+
+        lbl_dot.setText(".");
+        lbl_dot.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(64, 64, 64)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(lbl_sv)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabel1)))
+                .addGap(51, 51, 51)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lbl_sv)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lbl_type, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(chk_specwatt)
+                        .addGap(1, 1, 1)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(lbl_MAC, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_IP, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txt_detail, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(CB_type, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txt_name)
+                            .addComponent(txt_IP)
+                            .addComponent(txt_detail)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btn_testIP, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(spin_watt, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbl_dot)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(spin_watt2, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btn_testIP, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(lbl_IPconn))
-                            .addComponent(btn_ok, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(57, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lbl_MAC, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(btn_ok, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(60, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,21 +196,33 @@ public class ClientInfo extends javax.swing.JFrame {
                     .addComponent(btn_testIP)
                     .addComponent(lbl_IPconn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(14, 14, 14)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(lbl_MAC))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(lbl_MAC))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3)
-                            .addComponent(txt_detail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(btn_ok, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(45, Short.MAX_VALUE))
+                            .addComponent(txt_detail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_type)
+                            .addComponent(CB_type, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spin_watt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chk_specwatt)
+                            .addComponent(spin_watt2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbl_dot)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(btn_ok, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
 
         pack();
@@ -184,13 +251,28 @@ public class ClientInfo extends javax.swing.JFrame {
         
         if (db.CheckDB(txt_IP.getText(),"EnergyMonitor")) {
             ImageIcon icon = new ImageIcon(EnergyMonitor.class.getResource("/img/correctlogo.png"));
-            lbl_IPconn.setIcon(icon);           
-            GetInfo.saveServerIP(txt_IP.getText(),txt_name.getText(),txt_detail.getText());
+            lbl_IPconn.setIcon(icon);
+            String wattvalue = spin_watt.getValue()+"."+spin_watt2.getValue();
+            GetInfo.saveServerIP(txt_IP.getText(),txt_name.getText(),txt_detail.getText(),CB_type.getSelectedIndex()+"",wattvalue);
         } else {
             ImageIcon icon = new ImageIcon(EnergyMonitor.class.getResource("/img/incorrectuse.png"));
             lbl_IPconn.setIcon(icon);
         }
     }//GEN-LAST:event_btn_testIPActionPerformed
+
+    private void chk_specwattActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chk_specwattActionPerformed
+       if(chk_specwatt.isSelected()){
+           spin_watt.setEnabled(true);
+           spin_watt2.setEnabled(true);
+           lbl_dot.setEnabled(true);
+       }else{
+           spin_watt.setEnabled(false);
+           spin_watt2.setEnabled(false);
+           lbl_dot.setEnabled(false);
+           spin_watt.setValue(0);
+           spin_watt2.setValue(0);
+       }
+    }//GEN-LAST:event_chk_specwattActionPerformed
 
     /**
      * @param args the command line arguments
@@ -227,14 +309,20 @@ public class ClientInfo extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox CB_type;
     private javax.swing.JButton btn_ok;
     private javax.swing.JButton btn_testIP;
+    private javax.swing.JCheckBox chk_specwatt;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lbl_IPconn;
     private javax.swing.JLabel lbl_MAC;
+    private javax.swing.JLabel lbl_dot;
     private javax.swing.JLabel lbl_sv;
+    private javax.swing.JLabel lbl_type;
+    private javax.swing.JSpinner spin_watt;
+    private javax.swing.JSpinner spin_watt2;
     private javax.swing.JTextField txt_IP;
     private javax.swing.JTextField txt_detail;
     private javax.swing.JTextField txt_name;
