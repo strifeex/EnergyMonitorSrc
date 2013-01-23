@@ -84,7 +84,7 @@ public class ClientInfo extends javax.swing.JFrame {
         lbl_sv.setText("Server IP         :");
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        jLabel2.setText("MAC Adress       :");
+        jLabel2.setText("MAC Address       :");
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jLabel1.setText("Name               :");
@@ -160,7 +160,6 @@ public class ClientInfo extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(chk_specwatt)
                         .addGap(1, 1, 1)))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lbl_MAC, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
