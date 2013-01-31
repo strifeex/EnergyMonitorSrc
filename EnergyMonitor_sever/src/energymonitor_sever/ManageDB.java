@@ -113,9 +113,10 @@ public class ManageDB {
            
            this.sql = "CREATE TABLE client_online "
                    + "( "
-                   + "Id int , "
+                   + "Id int NOT NULL AUTO_INCREMENT, "
                    + "MAC varchar(50) , "
                    + "name varchar(255) , "
+                   + "detail varchar(255) , "
                    + "time TIMESTAMP , "
                    + "online_min int , "
                    + "start_time TIMESTAMP , "

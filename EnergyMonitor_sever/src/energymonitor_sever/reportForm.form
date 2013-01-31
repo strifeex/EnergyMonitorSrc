@@ -175,7 +175,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jTabbedPane1" max="32767" attributes="0"/>
+                          <Component id="jTabbedPane1" pref="1129" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jPanelR_Down" max="32767" attributes="0"/>
@@ -463,10 +463,12 @@
                                   <Component id="lbl_amount_user_unit" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="lbl_curr_user" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="txt_curr_user" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lbl_curr_user_unit" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="txt_curr_user" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lbl_curr_user_unit" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>

@@ -24,6 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import javax.swing.GroupLayout;
@@ -56,7 +57,11 @@ public class reportForm extends javax.swing.JFrame {
     static String sql = "";
     static String sqlClient = "";
     static String sqlBargraph = "";
+    static String sqlClientOnline = "";
 
+    public int sum_onlineTime = 0;
+    public int sum_wasteTime = 0;
+    
     Object[] data = new Object[0];
     Calendar cal = Calendar.getInstance();
     
@@ -92,13 +97,17 @@ public class reportForm extends javax.swing.JFrame {
                 String str_date1 = sdf.format(cld.getDate());
                 String str_date2 = sdf.format(cld2.getDate());
                 
-                String txt_sql = "select name , detail , sum(lost_min) as lost_min , watt ";
+                String txt_sql = "select MAC , name , detail , sum(lost_min) as lost_min , watt ";
                 txt_sql += "from client_info where time  between '"+ str_date1 +" 00:00:00'";
                 txt_sql += " and '"+ str_date2 +" 23:59:59' group by MAC";
                 reportForm.this.sql = txt_sql;
                               
-
-                reportForm.this.sqlClient = "select name , detail from client_info where time between '"+str_date1 +" 00:00:00'";
+                txt_sql = "select MAC , name , detail , sum(online_min) as online_min ";
+                txt_sql += "from client_online where time  between '"+ str_date1 +" 00:00:00'";
+                txt_sql += " and '"+ str_date2 +" 23:59:59' group by MAC";
+                reportForm.this.sqlClientOnline = txt_sql;
+                 
+                reportForm.this.sqlClient = "select MAC ,name , detail from client_info where time between '"+str_date1 +" 00:00:00'";
                 reportForm.this.sqlClient += " and '"+ str_date2 +" 23:59:59' group by MAC";
                 
                 reportForm.this.sqlBargraph = "select start_time , lost_min , DATE_FORMAT(start_time,'%H') as hr "
@@ -109,7 +118,7 @@ public class reportForm extends javax.swing.JFrame {
                 
                 lbl_date.setText(reportForm.this.getfomatDate(cld.getDate(), cld2.getDate()));
                 
-                reportForm.this.selectView(reportForm.this.sql);
+                reportForm.this.selectView(reportForm.this.sql,reportForm.this.sqlClientOnline);
                 System.out.println(sqlBargraph);
                 p.setVisible(false);
                 jToggleView.setSelected(true);
@@ -204,10 +213,24 @@ public class reportForm extends javax.swing.JFrame {
             }
         } else {
             System.out.println("not  connnect");
-        }        
+        }
         
-        this.sql = "select name , detail , sum(lost_min) as lost_min , watt from client_info group by MAC";
+        
+        //sql for view dataTable Clientlist
+        String txt_sql = "select MAC , name , detail , sum(lost_min) as lost_min , watt ";
+        txt_sql += "from client_info where time  between  DATE_FORMAT(CURDATE(),'%Y-%m-%d 00:00:00') ";
+        txt_sql += " and  DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59') group by MAC";
+        reportForm.this.sql = txt_sql;
+
+        txt_sql = "select MAC , name , detail , sum(online_min) as online_min ";
+        txt_sql += "from client_online where time  between DATE_FORMAT(CURDATE(),'%Y-%m-%d 00:00:00') ";
+        txt_sql += " and DATE_FORMAT(CURDATE(),'%Y-%m-%d 23:59:59') group by MAC";
+        reportForm.this.sqlClientOnline = txt_sql;
+                
+          
+        // sql  for clientlist dataTable  Piechart
         this.sqlClient = "select name , detail from client_info group by MAC";
+        // sql for view BarChart
         this.sqlBargraph = "select start_time , lost_min , DATE_FORMAT(start_time,'%H') as hr , DATE_FORMAT(start_time,'%i') as min from client_info";
         
         //this.mdb.setMysqlPrivileges();
@@ -487,10 +510,11 @@ public class reportForm extends javax.swing.JFrame {
                     .addComponent(txt_amount_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbl_amount_user_unit))
                 .addGap(12, 12, 12)
-                .addGroup(jPanel_Dn_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel_Dn_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_curr_user)
-                    .addComponent(txt_curr_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_curr_user_unit))
+                    .addGroup(jPanel_Dn_2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txt_curr_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbl_curr_user_unit)))
                 .addContainerGap())
         );
 
@@ -554,14 +578,14 @@ public class reportForm extends javax.swing.JFrame {
             jPanel_loading_graphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_loading_graphLayout.createSequentialGroup()
                 .addGap(423, 423, 423)
-                .addComponent(jLabel_loding_graph, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addComponent(jLabel_loding_graph, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                 .addGap(431, 431, 431))
         );
         jPanel_loading_graphLayout.setVerticalGroup(
             jPanel_loading_graphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_loading_graphLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel_loding_graph, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                .addComponent(jLabel_loding_graph, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -617,14 +641,14 @@ public class reportForm extends javax.swing.JFrame {
             jPanel_loading_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel_loading_tableLayout.createSequentialGroup()
                 .addGap(428, 428, 428)
-                .addComponent(jLabel_load_table, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+                .addComponent(jLabel_load_table, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                 .addGap(426, 426, 426))
         );
         jPanel_loading_tableLayout.setVerticalGroup(
             jPanel_loading_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel_loading_tableLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel_load_table, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                .addComponent(jLabel_load_table, javax.swing.GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -693,7 +717,7 @@ public class reportForm extends javax.swing.JFrame {
             jPanelRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelRLayout.createSequentialGroup()
                 .addGroup(jPanelRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1151, Short.MAX_VALUE)
                     .addGroup(jPanelRLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jPanelR_Down, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -739,7 +763,7 @@ public class reportForm extends javax.swing.JFrame {
         return "From "+sdf.format(date1)+"   to   "+sdf.format(date2);
     }
     
-    private void selectView(String str_sql){
+    private void selectView(String str_sql,String str_online){
 
         lbl_date.setVisible(true);
         
@@ -760,10 +784,26 @@ public class reportForm extends javax.swing.JFrame {
         
 
             
-            String[] Columname = {"No", "Name", "Detail", "losttime (min)", "Unit"};
+            String[] Columname = {"no", "name", "detail" , "online time (min)" , "wastse time (min)","wastse time (%)", "unit"};
             DefaultTableModel model = new DefaultTableModel(Columname, 0);
             jTable1.setModel(model);      
             
+
+            
+            ResultSet rs_online = mdb.getSelectdata(str_online);
+            ArrayList<String> tmm_MacOnline = new ArrayList<String>();
+            ArrayList<String> tmm_MinOnline = new ArrayList<String>();
+            
+
+            try{
+                while(rs_online.next()){
+                    tmm_MacOnline.add(rs_online.getString("MAC"));
+                    tmm_MinOnline.add(rs_online.getString("online_min"));
+               
+                }
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
             ResultSet rs = mdb.getSelectdata(str_sql);
             
             double total_unit = 0; 
@@ -780,8 +820,28 @@ public class reportForm extends javax.swing.JFrame {
                     jTable1.setValueAt(c + 1 + "", c, 0);
                     jTable1.setValueAt(rs.getString("name"), c, 1);
                     jTable1.setValueAt(rs.getString("detail"), c, 2);
-                    jTable1.setValueAt(rs.getString("lost_min"), c, 3);
-                    jTable1.setValueAt(unit + "", c, 4);
+                    int tmpc = 0;
+                    int wasteTime = Integer.parseInt(rs.getString("lost_min"));
+                    double onlineTime =0;
+                    for(String n:tmm_MacOnline){
+                        if(rs.getString("MAC").equals(n)){
+                            
+                            String pattern = new String ( "#,###,##0" );
+		            DecimalFormat decimal_format = new DecimalFormat ( pattern );
+                             onlineTime = Integer.parseInt(tmm_MinOnline.get(tmpc));
+                             jTable1.setValueAt(decimal_format.format(onlineTime), c, 3);
+                            
+                        }
+                        tmpc++;
+                    }
+                    
+                    double wastePercent = (onlineTime/100)*wasteTime;
+                    
+                    jTable1.setValueAt(rs.getString("lost_min"), c, 4);
+
+                    jTable1.setValueAt(wastePercent+" %", c, 5);
+                    jTable1.setValueAt(unit + "", c, 6);
+
                     c++;
                     total_unit += unit;
                     //System.out.println(unit+"  : unit \n"+watt+" : watt  \n"+hr+" : hr");
@@ -869,8 +929,8 @@ public class reportForm extends javax.swing.JFrame {
                 
                 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                String rowString = "waste time (Minute)";
-                String colString = "Time";
+                String rowString = "waste time (minute)";
+                String colString = "time";
                 String strAM = "";
                 String strPM = "";
         
@@ -880,7 +940,7 @@ public class reportForm extends javax.swing.JFrame {
                 dataset.setValue(barValue[0], rowString, "24 ");
 
 
-                JFreeChart chart = ChartFactory.createBarChart3D("waste time Chart", "duration", rowString, dataset, PlotOrientation.VERTICAL, false, true, false);
+                JFreeChart chart = ChartFactory.createBarChart3D("WASTE TIME CHART", "TIME", rowString, dataset, PlotOrientation.VERTICAL, false, true, false);
                 CategoryPlot p = chart.getCategoryPlot();
 
                 BarRenderer renderer = (BarRenderer) p.getRenderer();
@@ -933,7 +993,7 @@ public class reportForm extends javax.swing.JFrame {
             }
     }
     
-    private void selectClientlist(String str_sql){
+    private void selectClientlist(String str_sql,String str_sqlOnline){
     
         
         lbl_date.setVisible(true);
@@ -952,11 +1012,12 @@ public class reportForm extends javax.swing.JFrame {
         DefaultTableModel model = new DefaultTableModel(Columname, 0);
         jTable1.setModel(model);
 
-        String sql_client = "select name , detail from client_info group by MAC";
-        ResultSet rs = mdb.getSelectdata(sql_client);
+        //String sql_client = "select name , detail from client_info group by MAC";
+        ResultSet rs = mdb.getSelectdata(str_sqlOnline);
 
 
         int c = 0;
+        this.sum_onlineTime = 0;
         try {
 
             while (rs.next()) {
@@ -965,6 +1026,7 @@ public class reportForm extends javax.swing.JFrame {
                 jTable1.setValueAt(c + 1 + "", c, 0);
                 jTable1.setValueAt(rs.getString("name"), c, 1);
                 jTable1.setValueAt(rs.getString("detail"), c, 2);
+                this.sum_onlineTime += Integer.parseInt(rs.getString("online_min"));
                 c++;
                 //System.out.println(unit+"  : unit \n"+watt+" : watt  \n"+hr+" : hr");
             }
@@ -977,13 +1039,18 @@ public class reportForm extends javax.swing.JFrame {
         rs = mdb.getSelectdata(str_sql);
         
         int c_cuurent = 0;
+        this.sum_wasteTime = 0;
         try {
-            rs.last();
-            c_cuurent = rs.getRow();
+            
+             while (rs.next()) {
+                 this.sum_wasteTime += Integer.parseInt(rs.getString("lost_min"));
+                 c_cuurent++;
+             }
         } catch (Exception ex) {
         }
 
 
+        str_sql = "";
         //jPanel_table.setVisible(true);
 
         txt_amount_user.setText(c+"");
@@ -1082,7 +1149,7 @@ public class reportForm extends javax.swing.JFrame {
         
         if(jToggleClientlist.isSelected()){
 
-            selectClientlist(this.sqlClient);
+            selectClientlist(this.sql,this.sqlClientOnline);
         }
     }//GEN-LAST:event_jToggleClientlistActionPerformed
 

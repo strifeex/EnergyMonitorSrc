@@ -50,9 +50,10 @@ public class TaskProcess extends TimerTask {
          
             if(this.second_ini == 60){
                 if (this.chk_ini) {
-                    this.mdb.insertData("insert into client_online(MAC,name,online_min,start_time)"
+                    this.mdb.insertData("insert into client_online(MAC,name,detail,online_min,start_time)"
                             + " values('" + tmp_MAC + "',"
                             + "'" + GetInfo.name_txt + "',"
+                            + "'" + GetInfo.detail_txt + "',"
                             + "'" + 1 + "',"
                             + "SUBDATE(NOW(),INTERVAL " + 60 + " SECOND) )");
 
@@ -62,6 +63,7 @@ public class TaskProcess extends TimerTask {
                     System.out.println("up online");
                     this.mdb.updateData("update client_online set "
                             + "name = '" + GetInfo.name_txt + "' , "
+                            + "detail = '" + GetInfo.detail_txt + "' , "
                             + "online_min = online_min +" + 1 + " ,"
                             + "start_time = SUBDATE(NOW(),INTERVAL (online_min*60)+60 SECOND) "
                             + "where Id = " + this.tmp_id_ini + "");
